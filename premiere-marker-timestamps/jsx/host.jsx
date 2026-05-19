@@ -27,6 +27,27 @@ MarkerTimestamps.cleanMarkerName = function (name) {
   return String(name).replace(/[\r\n\t]+/g, " ").replace(/^\s+|\s+$/g, "");
 };
 
+MarkerTimestamps.getActiveSequenceName = function () {
+  try {
+    if (app && app.project && app.project.activeSequence && app.project.activeSequence.name) {
+      return String(app.project.activeSequence.name);
+    }
+  } catch (error) {}
+
+  return "Marker Timestamps";
+};
+
+MarkerTimestamps.sanitizeFileName = function (name) {
+  name = MarkerTimestamps.cleanMarkerName(name);
+  name = name.replace(/[\\\/:*?"<>|]/g, "-").replace(/\s+/g, " ").replace(/^\.+|\.+$/g, "");
+
+  if (!name) {
+    return "Marker Timestamps";
+  }
+
+  return name;
+};
+
 MarkerTimestamps.formatMarkerLine = function (marker) {
   var timestamp = MarkerTimestamps.formatSeconds(MarkerTimestamps.getMarkerSeconds(marker));
   var name = MarkerTimestamps.cleanMarkerName(marker.name);
@@ -80,6 +101,44 @@ MarkerTimestamps.getActiveSequenceMarkerTimes = function () {
 
     return timestamps.join("\n");
   } catch (error) {
+    return "ERROR:" + error.toString();
+  }
+};
+
+MarkerTimestamps.saveTextFile = function (content) {
+  var file;
+
+  try {
+    var sequenceName = MarkerTimestamps.sanitizeFileName(MarkerTimestamps.getActiveSequenceName());
+    var defaultFile = new File("~/Desktop/" + sequenceName + ".txt");
+
+    file = defaultFile.saveDlg("Save marker timestamps", "Text Files:*.txt");
+
+    if (!file) {
+      return "CANCELLED";
+    }
+
+    if (!/\.txt$/i.test(file.fsName)) {
+      file = new File(file.fsName + ".txt");
+    }
+
+    file.encoding = "UTF-8";
+
+    if (!file.open("w")) {
+      return "ERROR:Could not open the selected file for writing.";
+    }
+
+    file.write(content);
+    file.close();
+
+    return file.fsName;
+  } catch (error) {
+    try {
+      if (file && file.opened) {
+        file.close();
+      }
+    } catch (closeError) {}
+
     return "ERROR:" + error.toString();
   }
 };

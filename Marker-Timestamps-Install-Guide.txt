@@ -14,7 +14,8 @@ Example output:
 01:42 - Product closeup
 03:08 - End screen
 
-You can copy the full timestamp list directly from the extension panel.
+You can copy the full timestamp list directly from the extension panel, or
+save/share it as a .txt file in a location you choose.
 
 
 ==================================================
@@ -76,19 +77,50 @@ MACOS INSTALLATION
 
    premiere-marker-timestamps
 
-4. Double-click this file:
+4. Do not double-click the installer the first time.
+
+   Right-click or Control-click this file:
 
    Install on macOS.command
 
-5. If macOS blocks the file, right-click it and choose:
+5. Choose:
 
    Open
 
-6. Wait until the installer says installation is complete.
+6. If macOS shows this warning:
 
-7. Restart Adobe Premiere Pro.
+   "Install on macOS.command" Not Opened
+   Apple could not verify "Install on macOS.command" is free of malware.
 
-8. In Premiere Pro, open:
+   And it only shows:
+
+   Move to Trash
+   Done
+
+   Use this fix:
+
+   A. Open Terminal.
+
+   B. Type this command, but do not press Return yet:
+
+      xattr -dr com.apple.quarantine 
+
+      Important: there is a space after "quarantine".
+
+   C. Drag the full "premiere-marker-timestamps" folder into the Terminal
+      window.
+
+   D. Press Return.
+
+   E. Right-click or Control-click "Install on macOS.command" again.
+
+   F. Choose Open.
+
+7. Wait until the installer says installation is complete.
+
+8. Restart Adobe Premiere Pro.
+
+9. In Premiere Pro, open:
 
    Window > Extensions > Marker Timestamps
 
@@ -121,7 +153,16 @@ HOW TO USE THE EXTENSION
 
    Copy
 
-7. Paste the timestamps anywhere you want, such as:
+7. To create a shareable text file, click:
+
+   Save TXT
+
+8. Choose where to save the .txt file.
+
+   The file name will be suggested from the active timeline/sequence name.
+
+9. Paste the copied timestamps anywhere you want, or share the saved .txt file,
+   such as:
 
    - YouTube description
    - Notepad
@@ -181,13 +222,23 @@ IF THE EXTENSION DOES NOT SHOW IN PREMIERE PRO
 
 4. If it still does not show, run the installer again.
 
-5. On macOS, if the installer does not open, right-click:
+5. On macOS, if the installer does not open, right-click or Control-click:
 
    Install on macOS.command
 
    Then choose:
 
    Open
+
+6. If macOS says Apple could not verify the file and only shows Move to Trash
+   or Done, remove the quarantine flag:
+
+   Open Terminal and type:
+
+   xattr -dr com.apple.quarantine 
+
+   Then drag the "premiere-marker-timestamps" folder into Terminal and press
+   Return.
 
 
 ==================================================

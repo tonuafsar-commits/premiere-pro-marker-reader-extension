@@ -1,0 +1,71 @@
+MACOS FIX: "APPLE COULD NOT VERIFY"
+
+If macOS shows this message:
+
+"Install on macOS.command" Not Opened
+Apple could not verify "Install on macOS.command" is free of malware...
+
+This happens because the installer is an unsigned script. It does not mean the
+extension is malware. macOS blocks unsigned downloaded scripts by default.
+
+
+EASIEST FIX
+===========
+
+1. Close the warning window.
+
+2. Right-click or Control-click:
+
+   Install on macOS.command
+
+3. Choose:
+
+   Open
+
+4. If macOS asks again, click:
+
+   Open
+
+
+IF IT ONLY SHOWS "MOVE TO TRASH" AND "DONE"
+===========================================
+
+Use this method:
+
+1. Open Terminal.
+
+2. Type this command, but do not press Return yet:
+
+   xattr -dr com.apple.quarantine 
+
+   Important: there is a space after "quarantine".
+
+3. Drag the full "premiere-marker-timestamps" folder into the Terminal window.
+
+4. Press Return.
+
+5. Now right-click or Control-click:
+
+   Install on macOS.command
+
+6. Choose:
+
+   Open
+
+
+AFTER INSTALLING
+================
+
+Restart Adobe Premiere Pro.
+
+Then open:
+
+Window > Extensions > Marker Timestamps
+
+
+WHY THIS HAPPENS
+================
+
+This installer is not signed/notarized with an Apple Developer certificate.
+For a public commercial release, the macOS installer should be signed and
+notarized by Apple so this warning does not appear.

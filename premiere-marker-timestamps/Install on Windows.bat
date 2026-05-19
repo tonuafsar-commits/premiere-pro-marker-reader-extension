@@ -3,8 +3,6 @@ setlocal
 
 set "EXTENSION_ID=premiere-marker-timestamps"
 set "SOURCE_DIR=%~dp0"
-set "TARGET_ROOT=%APPDATA%\Adobe\CEP\extensions"
-set "TARGET_DIR=%TARGET_ROOT%\%EXTENSION_ID%"
 
 echo.
 echo Marker Timestamps installer for Adobe Premiere Pro
@@ -22,30 +20,27 @@ if not exist "%SOURCE_DIR%CSXS\manifest.xml" (
 echo Closing Premiere Pro before installing is recommended.
 echo.
 
-if not exist "%TARGET_ROOT%" (
-  mkdir "%TARGET_ROOT%" >nul 2>nul
-)
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ^
+  "$ErrorActionPreference = 'Stop';" ^
+  "$source = [System.IO.Path]::GetFullPath('%SOURCE_DIR%');" ^
+  "$targetRoot = Join-Path $env:APPDATA 'Adobe\CEP\extensions';" ^
+  "$target = Join-Path $targetRoot '%EXTENSION_ID%';" ^
+  "$excluded = @('Install on Windows.bat','Install on macOS.command','Uninstall on Windows.bat','Uninstall on macOS.command');" ^
+  "if (-not (Test-Path -LiteralPath (Join-Path $source 'CSXS\manifest.xml'))) { throw 'CSXS\manifest.xml was not found. Extract the zip first, then run this installer from the extracted folder.' }" ^
+  "New-Item -ItemType Directory -Path $targetRoot -Force | Out-Null;" ^
+  "if (Test-Path -LiteralPath $target) { Remove-Item -LiteralPath $target -Recurse -Force }" ^
+  "New-Item -ItemType Directory -Path $target -Force | Out-Null;" ^
+  "Get-ChildItem -LiteralPath $source -Force | Where-Object { $excluded -notcontains $_.Name } | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $target -Recurse -Force };" ^
+  "foreach ($version in 6..15) { New-Item -Path ('HKCU:\Software\Adobe\CSXS.' + $version) -Force | Out-Null; New-ItemProperty -Path ('HKCU:\Software\Adobe\CSXS.' + $version) -Name PlayerDebugMode -Value '1' -PropertyType String -Force | Out-Null };" ^
+  "Write-Host ''; Write-Host 'Installed to:'; Write-Host $target;"
 
-if exist "%TARGET_DIR%" (
-  echo Removing old installed copy...
-  rmdir /s /q "%TARGET_DIR%"
-)
-
-echo Installing extension to:
-echo %TARGET_DIR%
-echo.
-
-robocopy "%SOURCE_DIR%" "%TARGET_DIR%" /E /XD ".git" /XF "Install on Windows.bat" "Install on macOS.command" "Uninstall on Windows.bat" "Uninstall on macOS.command" >nul
-if errorlevel 8 (
-  echo ERROR: File copy failed.
+if errorlevel 1 (
+  echo.
+  echo ERROR: Installation failed.
+  echo Make sure the zip is fully extracted, close Premiere Pro, and run this installer again.
   echo.
   pause
   exit /b 1
-)
-
-echo Enabling unsigned CEP extension loading for this Windows user...
-for %%V in (6 7 8 9 10 11 12 13 14 15) do (
-  reg add "HKCU\Software\Adobe\CSXS.%%V" /v PlayerDebugMode /t REG_SZ /d 1 /f >nul
 )
 
 echo.

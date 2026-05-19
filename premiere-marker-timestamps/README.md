@@ -18,6 +18,7 @@ For marker times under one hour, the panel outputs `mm:ss - name`. For marker ti
 - `index.html` - Panel markup.
 - `css/styles.css` - Lightweight panel styling.
 - `js/main.js` - Panel logic and copy behavior.
+- `Save TXT` - Exports the generated marker list as a `.txt` file to a chosen location.
 - `js/CSInterface.js` - Minimal CEP bridge wrapper.
 - `jsx/host.jsx` - Premiere Pro ExtendScript marker scanner.
 
@@ -43,13 +44,33 @@ It also enables CEP development extension loading for the current Windows user.
 
 ### macOS
 
-Double-click:
+Do not double-click the installer the first time. Because this is not signed/notarized with an Apple Developer certificate, macOS may block it.
+
+Right-click or Control-click:
 
 ```text
 Install on macOS.command
 ```
 
-If macOS blocks the file because it was downloaded from the internet, right-click it and choose `Open`.
+Then choose:
+
+```text
+Open
+```
+
+If macOS shows `Apple could not verify "Install on macOS.command" is free of malware` and only offers `Move to Trash` or `Done`, open the included file:
+
+```text
+macOS - If Apple Could Not Verify.txt
+```
+
+The short fix is to open Terminal and run:
+
+```text
+xattr -dr com.apple.quarantine /path/to/premiere-marker-timestamps
+```
+
+Tip: type `xattr -dr com.apple.quarantine ` with a space at the end, drag the `premiere-marker-timestamps` folder into Terminal, then press Return.
 
 The installer copies the extension to:
 
@@ -88,5 +109,6 @@ Uninstall on macOS.command
 1. Open a Premiere Pro project and activate the sequence timeline.
 2. Click `Scan Markers`.
 3. Click `Copy` to copy the timestamp and marker name list.
+4. Click `Save TXT` to choose a location and export the same list as a `.txt` file. The suggested file name uses the active sequence/timeline name.
 
 The scanner reads sequence markers from `app.project.activeSequence.markers`, including each marker's `name` field. Clip markers are not included.
