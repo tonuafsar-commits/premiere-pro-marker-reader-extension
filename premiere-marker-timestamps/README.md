@@ -12,7 +12,7 @@ Example output:
 
 For marker times under one hour, the panel outputs `mm:ss - name`. For marker times at one hour or later, it outputs `hh:mm:ss - name` because the hour is required to avoid ambiguity. Frames are ignored and never shown.
 
-The panel can also show an in-panel update notice when a newer version is published through the hosted `update.json` file. Users can click `Check Update` and then `Download Update` to get the latest complete package. After a TXT export succeeds, it plays `assets/save-success.mp3` if that file is present; otherwise it plays a short built-in chime.
+The panel can also show an in-panel update notice when a newer version is published through the hosted `update.json` file. Users can click `Check Update` and then `Download Update` to get the latest complete package. After a TXT export succeeds, it plays `assets/save-success.mp3` if that file is present; otherwise it plays a short built-in chime. This sound is panel-only and is never added to the Premiere project, timeline, render queue, or exported video/audio.
 
 ## Files
 

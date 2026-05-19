@@ -144,9 +144,15 @@
   }
 
   function playSaveSuccessSound() {
+    if (!successSound) {
+      playFallbackChime();
+      return;
+    }
+
     if (successSound && successSound.play) {
       try {
         successSound.currentTime = 0;
+        successSound.volume = 0.85;
         var playResult = successSound.play();
 
         if (playResult && playResult.catch) {
