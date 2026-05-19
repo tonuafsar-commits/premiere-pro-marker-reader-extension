@@ -28,6 +28,12 @@ The panel can also show an in-panel update notice when a newer version is publis
 
 Close Premiere Pro first.
 
+If installation or usage fails, open:
+
+```text
+SOLUTION - Install and Use Problems.txt
+```
+
 ### Windows
 
 Double-click:

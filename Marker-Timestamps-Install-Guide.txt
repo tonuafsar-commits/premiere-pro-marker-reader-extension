@@ -32,6 +32,10 @@ Marker-Timestamps-Premiere-Extension.zip
 The user should extract the zip first, then run the installer for their
 operating system.
 
+If installation or usage fails, open:
+
+SOLUTION - Install and Use Problems.txt
+
 
 ==================================================
 WINDOWS INSTALLATION

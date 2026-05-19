@@ -1,0 +1,220 @@
+SOLUTION - INSTALL AND USE PROBLEMS
+Marker Timestamps for Adobe Premiere Pro
+
+Use this guide if the extension cannot be installed, does not show in Premiere
+Pro, or does not work after installation.
+
+
+==================================================
+WINDOWS SOLUTIONS
+==================================================
+
+PROBLEM:
+Windows says "Unknown Publisher" or shows SmartScreen.
+
+SOLUTION:
+1. Click "More info".
+2. Click "Run anyway".
+3. Continue installation.
+
+WHY:
+The installer is not code-signed yet, so Windows cannot verify the publisher.
+
+
+PROBLEM:
+Installer says file copy failed or installation failed.
+
+SOLUTION:
+1. Close Adobe Premiere Pro.
+2. Make sure the zip file is fully extracted.
+3. Do not run the installer from inside the zip preview window.
+4. Move the extracted folder to Desktop or Downloads.
+5. Right-click "Install on Windows.bat".
+6. Choose "Run as administrator".
+
+BEST OPTION:
+Use this file instead of the batch installer:
+
+Marker-Timestamps-Premiere-Installer-Windows.exe
+
+
+PROBLEM:
+The extension does not appear in Premiere Pro.
+
+SOLUTION:
+1. Restart Premiere Pro.
+2. Open:
+
+   Window > Extensions > Marker Timestamps
+
+3. If it is still missing, reinstall the extension.
+4. Confirm this file exists:
+
+   C:\Users\<you>\AppData\Roaming\Adobe\CEP\extensions\premiere-marker-timestamps\CSXS\manifest.xml
+
+5. Make sure debug mode is enabled. The installer normally does this
+   automatically. If needed, set this Windows registry value:
+
+   HKEY_CURRENT_USER\Software\Adobe\CSXS.11
+   PlayerDebugMode = 1
+
+   Also repeat for CSXS.9, CSXS.10, CSXS.12, CSXS.13, CSXS.14, and CSXS.15
+   if those keys exist or are needed.
+
+
+PROBLEM:
+Scan Markers shows no markers.
+
+SOLUTION:
+1. Make sure the correct timeline/sequence is open and active.
+2. Make sure the markers are sequence/timeline markers.
+3. Clip markers inside video/audio clips are not supported.
+4. Click inside the timeline panel, then click "Scan Markers" again.
+
+
+PROBLEM:
+Save TXT does not save.
+
+SOLUTION:
+1. Click "Save TXT" again.
+2. Choose a simple folder such as Desktop or Documents.
+3. Avoid protected folders such as Program Files or system folders.
+4. If the save dialog appears behind Premiere, use Alt+Tab to bring it forward.
+5. Restart Premiere Pro and try again.
+
+
+==================================================
+MACOS SOLUTIONS
+==================================================
+
+PROBLEM:
+macOS says:
+"Install on macOS.command" Not Opened
+Apple could not verify it is free of malware.
+
+SOLUTION 1:
+1. Close the warning.
+2. Right-click or Control-click:
+
+   Install on macOS.command
+
+3. Choose:
+
+   Open
+
+4. If macOS asks again, click:
+
+   Open
+
+
+SOLUTION 2:
+If macOS only shows "Move to Trash" and "Done":
+
+1. Open Terminal.
+2. Type this command, but do not press Return yet:
+
+   xattr -dr com.apple.quarantine 
+
+   Important: there is a space after "quarantine".
+
+3. Drag the full "premiere-marker-timestamps" folder into Terminal.
+4. Press Return.
+5. Right-click or Control-click:
+
+   Install on macOS.command
+
+6. Choose:
+
+   Open
+
+
+PROBLEM:
+macOS says permission denied when opening installer.
+
+SOLUTION:
+1. Open Terminal.
+2. Type:
+
+   chmod +x 
+
+   Important: there is a space after "+x".
+
+3. Drag "Install on macOS.command" into Terminal.
+4. Press Return.
+5. Right-click the installer and choose "Open".
+
+
+PROBLEM:
+The extension does not appear in Premiere Pro on Mac.
+
+SOLUTION:
+1. Restart Premiere Pro.
+2. Open:
+
+   Window > Extensions > Marker Timestamps
+
+3. Confirm this file exists:
+
+   ~/Library/Application Support/Adobe/CEP/extensions/premiere-marker-timestamps/CSXS/manifest.xml
+
+4. Enable CEP debug mode manually:
+
+   Open Terminal and run:
+
+   defaults write com.adobe.CSXS.9 PlayerDebugMode 1
+   defaults write com.adobe.CSXS.10 PlayerDebugMode 1
+   defaults write com.adobe.CSXS.11 PlayerDebugMode 1
+   defaults write com.adobe.CSXS.12 PlayerDebugMode 1
+   defaults write com.adobe.CSXS.13 PlayerDebugMode 1
+   defaults write com.adobe.CSXS.14 PlayerDebugMode 1
+   defaults write com.adobe.CSXS.15 PlayerDebugMode 1
+
+5. Restart Premiere Pro again.
+
+
+PROBLEM:
+Scan Markers shows no markers on Mac.
+
+SOLUTION:
+1. Make sure the correct sequence/timeline is active.
+2. Click inside the timeline panel before scanning.
+3. Make sure the markers are timeline/sequence markers.
+4. Clip markers are not supported.
+
+
+PROBLEM:
+Save TXT does not save on Mac.
+
+SOLUTION:
+1. Click "Save TXT" again.
+2. Choose Desktop or Documents.
+3. If macOS asks for file/folder permission, click Allow.
+4. If the save dialog appears behind Premiere, use Command+Tab or Mission
+   Control to bring it forward.
+5. Restart Premiere Pro and try again.
+
+
+==================================================
+GENERAL SOLUTIONS
+==================================================
+
+If nothing works:
+
+1. Close Premiere Pro.
+2. Uninstall using:
+
+   Windows: Uninstall on Windows.bat
+   macOS: Uninstall on macOS.command
+
+3. Restart the computer.
+4. Install again.
+5. Restart Premiere Pro.
+6. Open:
+
+   Window > Extensions > Marker Timestamps
+
+
+IMPORTANT:
+This extension reads sequence/timeline markers only.
+It does not read clip markers inside individual clips.
+
