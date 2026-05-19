@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Marker Timestamps</title>
+    <link rel="stylesheet" href="./css/styles.css">
+  </head>
+  <body>
+    <main class="panel">
+      <header class="header">
+        <h1>Marker Timestamps</h1>
+        <p id="status" class="status">Open a sequence, then scan its timeline markers.</p>
+      </header>
+
+      <section class="actions" aria-label="Marker timestamp actions">
+        <button id="scanButton" type="button">Scan Markers</button>
+        <button id="copyButton" type="button" disabled>Copy</button>
+      </section>
+
+      <label class="outputLabel" for="timestampOutput">Timestamps and Names</label>
+      <textarea id="timestampOutput" spellcheck="false" placeholder="00:15 - Intro&#10;01:42 - Product closeup&#10;03:08 - End screen"></textarea>
+    </main>
+
+    <script src="./js/CSInterface.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>

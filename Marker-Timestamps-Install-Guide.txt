@@ -1,0 +1,207 @@
+HOW TO INSTALL AND USE MARKER TIMESTAMPS
+Adobe Premiere Pro Extension
+
+==================================================
+WHAT THIS EXTENSION DOES
+==================================================
+
+Marker Timestamps scans the currently active Premiere Pro sequence/timeline
+and lists all sequence marker times with their marker names.
+
+Example output:
+
+00:15 - Intro
+01:42 - Product closeup
+03:08 - End screen
+
+You can copy the full timestamp list directly from the extension panel.
+
+
+==================================================
+WHAT TO SHARE
+==================================================
+
+Share this zip file:
+
+Marker-Timestamps-Premiere-Extension.zip
+
+The user should extract the zip first, then run the installer for their
+operating system.
+
+
+==================================================
+WINDOWS INSTALLATION
+==================================================
+
+1. Close Adobe Premiere Pro completely.
+
+2. Extract the zip file:
+
+   Marker-Timestamps-Premiere-Extension.zip
+
+3. Open the extracted folder:
+
+   premiere-marker-timestamps
+
+4. Double-click this file:
+
+   Install on Windows.bat
+
+5. If Windows shows a warning, choose:
+
+   More info > Run anyway
+
+6. Wait until the installer says installation is complete.
+
+7. Restart Adobe Premiere Pro.
+
+8. In Premiere Pro, open:
+
+   Window > Extensions > Marker Timestamps
+
+The extension panel should now appear inside Premiere Pro.
+
+
+==================================================
+MACOS INSTALLATION
+==================================================
+
+1. Close Adobe Premiere Pro completely.
+
+2. Extract the zip file:
+
+   Marker-Timestamps-Premiere-Extension.zip
+
+3. Open the extracted folder:
+
+   premiere-marker-timestamps
+
+4. Double-click this file:
+
+   Install on macOS.command
+
+5. If macOS blocks the file, right-click it and choose:
+
+   Open
+
+6. Wait until the installer says installation is complete.
+
+7. Restart Adobe Premiere Pro.
+
+8. In Premiere Pro, open:
+
+   Window > Extensions > Marker Timestamps
+
+The extension panel should now appear inside Premiere Pro.
+
+
+==================================================
+HOW TO USE THE EXTENSION
+==================================================
+
+1. Open your Premiere Pro project.
+
+2. Open the timeline/sequence that contains your markers.
+
+3. In Premiere Pro, open:
+
+   Window > Extensions > Marker Timestamps
+
+4. Click:
+
+   Scan Markers
+
+5. The extension will show marker timestamps and names like this:
+
+   00:15 - Intro
+   01:42 - Product closeup
+   03:08 - End screen
+
+6. Click:
+
+   Copy
+
+7. Paste the timestamps anywhere you want, such as:
+
+   - YouTube description
+   - Notepad
+   - Google Docs
+   - Spreadsheet
+   - Script or editing notes
+
+
+==================================================
+TIMESTAMP FORMAT
+==================================================
+
+For timestamps under one hour, the extension shows:
+
+mm:ss - name
+
+Example:
+
+03:08 - End screen
+
+For timestamps at one hour or later, the extension shows:
+
+hh:mm:ss - name
+
+Example:
+
+01:03:08 - Final section
+
+Frames are ignored and not shown.
+
+
+==================================================
+IMPORTANT NOTES
+==================================================
+
+This extension detects sequence/timeline markers from the currently active
+sequence.
+
+It reads the marker Name field and places it after the timestamp.
+
+It does not detect clip markers inside individual video or audio clips.
+
+Make sure the correct timeline is active before clicking Scan Markers.
+
+
+==================================================
+IF THE EXTENSION DOES NOT SHOW IN PREMIERE PRO
+==================================================
+
+1. Restart Premiere Pro.
+
+2. Make sure you ran the installer file, not just opened the folder.
+
+3. In Premiere Pro, check:
+
+   Window > Extensions > Marker Timestamps
+
+4. If it still does not show, run the installer again.
+
+5. On macOS, if the installer does not open, right-click:
+
+   Install on macOS.command
+
+   Then choose:
+
+   Open
+
+
+==================================================
+UNINSTALL
+==================================================
+
+Windows:
+
+Double-click:
+
+Uninstall on Windows.bat
+
+macOS:
+
+Double-click:
+
+Uninstall on macOS.command

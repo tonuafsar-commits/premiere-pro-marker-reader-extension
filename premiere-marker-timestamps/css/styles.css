@@ -1,0 +1,133 @@
+:root {
+  color-scheme: dark;
+  --background: #232323;
+  --panel: #2d2d2d;
+  --panel-soft: #383838;
+  --text: #f2f2f2;
+  --muted: #b8b8b8;
+  --border: #4b4b4b;
+  --accent: #4fb7ff;
+  --accent-hover: #7ac8ff;
+  --danger: #ff8c7a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-width: 280px;
+  min-height: 300px;
+  margin: 0;
+  background: var(--background);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.status {
+  min-height: 32px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.status.error {
+  color: var(--danger);
+}
+
+.status.success {
+  color: var(--accent-hover);
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+button {
+  min-height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--panel-soft);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled),
+button:focus-visible:not(:disabled) {
+  border-color: var(--accent);
+  outline: none;
+}
+
+button:active:not(:disabled) {
+  background: #303030;
+}
+
+button:disabled {
+  color: #777;
+  cursor: default;
+}
+
+#scanButton {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #101820;
+}
+
+#scanButton:hover:not(:disabled),
+#scanButton:focus-visible:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.outputLabel {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 170px;
+  resize: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--text);
+  padding: 12px;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+}
