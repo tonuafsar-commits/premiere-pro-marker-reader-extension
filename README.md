@@ -22,6 +22,8 @@ Example:
 
 Frames are ignored and never shown.
 
+The panel can show an update notice when the hosted `update.json` reports a newer version.
+
 ## Download
 
 Use the files in the `dist` folder:
@@ -56,7 +58,7 @@ Windows may show an unknown publisher warning because the installer is not code-
 3. Open `Window > Extensions > Marker Timestamps`.
 4. Click `Scan Markers`.
 5. Click `Copy`.
-6. Click `Save TXT` to export a `.txt` file. The suggested file name uses the active sequence/timeline name.
+6. Click `Save TXT` to export a `.txt` file. The suggested file name uses the active sequence/timeline name, and a popup confirms the saved file path.
 
 The extension reads sequence markers from `app.project.activeSequence.markers`. Clip markers inside individual video/audio clips are not included.
 

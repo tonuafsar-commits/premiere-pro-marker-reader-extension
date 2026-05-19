@@ -1,12 +1,16 @@
 (function () {
   "use strict";
 
+  var CURRENT_VERSION = "1.2.0";
+  var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/marker-timestamps-premiere/master/update.json";
   var csInterface = new CSInterface();
   var scanButton = document.getElementById("scanButton");
   var copyButton = document.getElementById("copyButton");
   var exportButton = document.getElementById("exportButton");
   var output = document.getElementById("timestampOutput");
   var status = document.getElementById("status");
+  var updateNotice = document.getElementById("updateNotice");
+  var updateText = document.getElementById("updateText");
 
   function setStatus(message, type) {
     status.textContent = message;
@@ -25,6 +29,58 @@
       .replace(/'/g, "\\'")
       .replace(/\r/g, "\\r")
       .replace(/\n/g, "\\n");
+  }
+
+  function compareVersions(left, right) {
+    var leftParts = String(left || "0").split(".");
+    var rightParts = String(right || "0").split(".");
+    var maxLength = Math.max(leftParts.length, rightParts.length);
+    var index;
+
+    for (index = 0; index < maxLength; index += 1) {
+      var leftNumber = parseInt(leftParts[index] || "0", 10);
+      var rightNumber = parseInt(rightParts[index] || "0", 10);
+
+      if (leftNumber > rightNumber) {
+        return 1;
+      }
+
+      if (leftNumber < rightNumber) {
+        return -1;
+      }
+    }
+
+    return 0;
+  }
+
+  function showUpdateNotice(latestVersion, message) {
+    updateText.textContent = "Version " + latestVersion + " is available." + (message ? " " + message : "");
+    updateNotice.hidden = false;
+  }
+
+  function checkForUpdates() {
+    var request = new XMLHttpRequest();
+    var url = UPDATE_CHECK_URL + "?t=" + new Date().getTime();
+
+    request.open("GET", url, true);
+    request.timeout = 5000;
+
+    request.onreadystatechange = function () {
+      if (request.readyState !== 4 || request.status < 200 || request.status >= 300) {
+        return;
+      }
+
+      try {
+        var data = JSON.parse(request.responseText);
+        var latestVersion = data.version || data.latestVersion;
+
+        if (latestVersion && compareVersions(latestVersion, CURRENT_VERSION) > 0) {
+          showUpdateNotice(latestVersion, data.message || "");
+        }
+      } catch (error) {}
+    };
+
+    request.send();
   }
 
   function scanMarkers() {
@@ -112,6 +168,7 @@
       }
 
       setStatus("Saved TXT file.", "success");
+      alert("TXT file saved successfully:\n" + result);
     });
   }
 
@@ -120,4 +177,5 @@
   exportButton.addEventListener("click", exportTimestamps);
   output.addEventListener("input", updateCopyState);
   updateCopyState();
+  checkForUpdates();
 }());

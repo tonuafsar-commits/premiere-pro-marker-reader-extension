@@ -8,6 +8,7 @@
   --border: #4b4b4b;
   --accent: #4fb7ff;
   --accent-hover: #7ac8ff;
+  --notice: #f5c542;
   --danger: #ff8c7a;
 }
 
@@ -60,6 +61,31 @@ h1 {
 
 .status.success {
   color: var(--accent-hover);
+}
+
+.updateNotice {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border: 1px solid #6f5b22;
+  border-radius: 4px;
+  background: #3b321f;
+  color: var(--text);
+  padding: 10px;
+  line-height: 1.35;
+}
+
+.updateNotice strong {
+  color: var(--notice);
+  font-size: 12px;
+}
+
+.updateNotice span {
+  color: #e4dcc8;
+}
+
+.updateNotice[hidden] {
+  display: none;
 }
 
 .actions {
