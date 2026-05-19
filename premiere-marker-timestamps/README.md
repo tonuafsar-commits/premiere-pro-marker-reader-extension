@@ -112,6 +112,5 @@ Uninstall on macOS.command
 2. Click `Scan Markers`.
 3. Click `Copy` to copy the timestamp and marker name list.
 4. Click `Save TXT` to choose a location and export the same list as a `.txt` file. The suggested file name uses the active sequence/timeline name.
-5. After the TXT file is saved, a popup confirms the saved file path.
 
 The scanner reads sequence markers from `app.project.activeSequence.markers`, including each marker's `name` field. Clip markers are not included.

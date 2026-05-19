@@ -48,6 +48,14 @@ MarkerTimestamps.sanitizeFileName = function (name) {
   return name;
 };
 
+MarkerTimestamps.getSuggestedTxtFileName = function () {
+  try {
+    return MarkerTimestamps.sanitizeFileName(MarkerTimestamps.getActiveSequenceName()) + ".txt";
+  } catch (error) {
+    return "Marker Timestamps.txt";
+  }
+};
+
 MarkerTimestamps.formatMarkerLine = function (marker) {
   var timestamp = MarkerTimestamps.formatSeconds(MarkerTimestamps.getMarkerSeconds(marker));
   var name = MarkerTimestamps.cleanMarkerName(marker.name);
@@ -109,8 +117,7 @@ MarkerTimestamps.saveTextFile = function (content) {
   var file;
 
   try {
-    var sequenceName = MarkerTimestamps.sanitizeFileName(MarkerTimestamps.getActiveSequenceName());
-    var defaultFile = new File("~/Desktop/" + sequenceName + ".txt");
+    var defaultFile = new File("~/Desktop/" + MarkerTimestamps.getSuggestedTxtFileName());
 
     file = defaultFile.saveDlg("Save marker timestamps", "Text Files:*.txt");
 

@@ -164,9 +164,7 @@ HOW TO USE THE EXTENSION
 
    The file name will be suggested from the active timeline/sequence name.
 
-9. After saving, a popup will confirm that the .txt file was saved.
-
-10. Paste the copied timestamps anywhere you want, or share the saved .txt file,
+9. Paste the copied timestamps anywhere you want, or share the saved .txt file,
    such as:
 
    - YouTube description

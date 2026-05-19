@@ -83,6 +83,104 @@
     request.send();
   }
 
+  function ensureTxtExtension(path) {
+    if (!/\.txt$/i.test(path)) {
+      return path + ".txt";
+    }
+
+    return path;
+  }
+
+  function getDialogPath(result) {
+    if (!result || result.err) {
+      return "";
+    }
+
+    if (typeof result.data === "string") {
+      return result.data;
+    }
+
+    if (result.data && result.data.length) {
+      return result.data[0];
+    }
+
+    return "";
+  }
+
+  function canUseCepSaveDialog() {
+    return window.cep && window.cep.fs &&
+      (typeof window.cep.fs.showSaveDialogEx === "function" || typeof window.cep.fs.showSaveDialog === "function") &&
+      typeof window.cep.fs.writeFile === "function";
+  }
+
+  function writeCepFile(path, text) {
+    var encoding = window.cep.encoding && window.cep.encoding.UTF8 ? window.cep.encoding.UTF8 : "UTF-8";
+    var result = window.cep.fs.writeFile(path, text, encoding);
+
+    if (result && result.err === 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  function saveWithCepDialog(text, suggestedName) {
+    var dialogResult;
+    var path;
+
+    try {
+      if (typeof window.cep.fs.showSaveDialogEx === "function") {
+        dialogResult = window.cep.fs.showSaveDialogEx(
+          "Save marker timestamps",
+          "",
+          suggestedName,
+          ["txt"],
+          "Text Files"
+        );
+      } else {
+        dialogResult = window.cep.fs.showSaveDialog(
+          "Save marker timestamps",
+          "",
+          suggestedName,
+          ["txt"]
+        );
+      }
+
+      path = ensureTxtExtension(getDialogPath(dialogResult));
+
+      if (!path) {
+        setStatus("Save cancelled.", "");
+        return;
+      }
+
+      if (writeCepFile(path, text)) {
+        setStatus("Saved TXT file.", "success");
+      } else {
+        setStatus("Could not write the selected TXT file.", "error");
+      }
+    } catch (error) {
+      saveWithHostDialog(text);
+    }
+  }
+
+  function saveWithHostDialog(text) {
+    csInterface.evalScript("MarkerTimestamps.saveTextFile('" + encodeForExtendScript(text) + "')", function (result) {
+      updateCopyState();
+
+      if (typeof result === "string" && result.indexOf("ERROR:") === 0) {
+        setStatus(result.replace("ERROR:", ""), "error");
+        return;
+      }
+
+      if (result === "CANCELLED") {
+        setStatus("Save cancelled.", "");
+        return;
+      }
+
+      setStatus("Saved TXT file.", "success");
+    });
+  }
+
   function scanMarkers() {
     scanButton.disabled = true;
     setStatus("Scanning active sequence markers...", "");
@@ -154,21 +252,20 @@
     exportButton.disabled = true;
     setStatus("Choose where to save the TXT file...", "");
 
-    csInterface.evalScript("MarkerTimestamps.saveTextFile('" + encodeForExtendScript(text) + "')", function (result) {
+    csInterface.evalScript("MarkerTimestamps.getSuggestedTxtFileName()", function (suggestedName) {
       updateCopyState();
 
-      if (typeof result === "string" && result.indexOf("ERROR:") === 0) {
-        setStatus(result.replace("ERROR:", ""), "error");
+      if (typeof suggestedName === "string" && suggestedName.indexOf("ERROR:") === 0) {
+        saveWithHostDialog(text);
         return;
       }
 
-      if (result === "CANCELLED") {
-        setStatus("Save cancelled.", "");
+      if (canUseCepSaveDialog()) {
+        saveWithCepDialog(text, suggestedName || "Marker Timestamps.txt");
         return;
       }
 
-      setStatus("Saved TXT file.", "success");
-      alert("TXT file saved successfully:\n" + result);
+      saveWithHostDialog(text);
     });
   }
 
