@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.0";
+  var CURRENT_VERSION = "1.2.1";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/marker-timestamps-premiere/master/update.json";
   var csInterface = new CSInterface();
   var scanButton = document.getElementById("scanButton");
@@ -11,6 +11,7 @@
   var status = document.getElementById("status");
   var updateNotice = document.getElementById("updateNotice");
   var updateText = document.getElementById("updateText");
+  var successSound = document.getElementById("successSound");
 
   function setStatus(message, type) {
     status.textContent = message;
@@ -81,6 +82,52 @@
     };
 
     request.send();
+  }
+
+  function playFallbackChime() {
+    var AudioContext = window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContext) {
+      return;
+    }
+
+    try {
+      var context = new AudioContext();
+      var oscillator = context.createOscillator();
+      var gain = context.createGain();
+      var now = context.currentTime;
+
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(740, now);
+      oscillator.frequency.setValueAtTime(980, now + 0.09);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.15, now + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.32);
+
+      oscillator.connect(gain);
+      gain.connect(context.destination);
+      oscillator.start(now);
+      oscillator.stop(now + 0.34);
+    } catch (error) {}
+  }
+
+  function playSaveSuccessSound() {
+    if (successSound && successSound.play) {
+      try {
+        successSound.currentTime = 0;
+        var playResult = successSound.play();
+
+        if (playResult && playResult.catch) {
+          playResult.catch(function () {
+            playFallbackChime();
+          });
+        }
+
+        return;
+      } catch (error) {}
+    }
+
+    playFallbackChime();
   }
 
   function ensureTxtExtension(path) {
@@ -155,6 +202,7 @@
 
       if (writeCepFile(path, text)) {
         setStatus("Saved TXT file.", "success");
+        playSaveSuccessSound();
       } else {
         setStatus("Could not write the selected TXT file.", "error");
       }
@@ -178,6 +226,7 @@
       }
 
       setStatus("Saved TXT file.", "success");
+      playSaveSuccessSound();
     });
   }
 

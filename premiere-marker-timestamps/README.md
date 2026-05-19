@@ -12,7 +12,7 @@ Example output:
 
 For marker times under one hour, the panel outputs `mm:ss - name`. For marker times at one hour or later, it outputs `hh:mm:ss - name` because the hour is required to avoid ambiguity. Frames are ignored and never shown.
 
-The panel can also show an in-panel update notice when a newer version is published through the hosted `update.json` file.
+The panel can also show an in-panel update notice when a newer version is published through the hosted `update.json` file. After a TXT export succeeds, it plays `assets/save-success.mp3` if that file is present; otherwise it plays a short built-in chime.
 
 ## Files
 
@@ -21,6 +21,7 @@ The panel can also show an in-panel update notice when a newer version is publis
 - `css/styles.css` - Lightweight panel styling.
 - `js/main.js` - Panel logic and copy behavior.
 - `Save TXT` - Exports the generated marker list as a `.txt` file to a chosen location.
+- `assets/save-success.mp3` - Optional custom success sound. Only include audio files you have permission to distribute.
 - `js/CSInterface.js` - Minimal CEP bridge wrapper.
 - `jsx/host.jsx` - Premiere Pro ExtendScript marker scanner.
 
@@ -118,5 +119,6 @@ Uninstall on macOS.command
 2. Click `Scan Markers`.
 3. Click `Copy` to copy the timestamp and marker name list.
 4. Click `Save TXT` to choose a location and export the same list as a `.txt` file. The suggested file name uses the active sequence/timeline name.
+5. A success sound plays after the TXT file is saved.
 
 The scanner reads sequence markers from `app.project.activeSequence.markers`, including each marker's `name` field. Clip markers are not included.

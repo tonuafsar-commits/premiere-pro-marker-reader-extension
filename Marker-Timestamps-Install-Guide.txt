@@ -16,6 +16,7 @@ Example output:
 
 You can copy the full timestamp list directly from the extension panel, or
 save/share it as a .txt file in a location you choose.
+After a TXT file saves successfully, the extension plays a short success sound.
 
 If a newer extension version is published, the panel can show an update notice
 inside Premiere Pro.
@@ -168,7 +169,9 @@ HOW TO USE THE EXTENSION
 
    The file name will be suggested from the active timeline/sequence name.
 
-9. Paste the copied timestamps anywhere you want, or share the saved .txt file,
+9. A success sound will play after the .txt file is saved.
+
+10. Paste the copied timestamps anywhere you want, or share the saved .txt file,
    such as:
 
    - YouTube description
