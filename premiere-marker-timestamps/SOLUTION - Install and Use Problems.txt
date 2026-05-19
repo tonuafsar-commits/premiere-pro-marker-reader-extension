@@ -33,9 +33,16 @@ SOLUTION:
 6. Choose "Run as administrator".
 
 BEST OPTION:
-Use this file instead of the batch installer:
+If the sender gave you the Windows EXE installer, use this file instead of the
+batch installer:
 
 Marker-Timestamps-Premiere-Installer-Windows.exe
+
+If you only received the zip package and there is no EXE file, use:
+
+Install on Windows.bat
+
+Make sure the zip is fully extracted before running the batch installer.
 
 
 PROBLEM:
@@ -217,4 +224,3 @@ If nothing works:
 IMPORTANT:
 This extension reads sequence/timeline markers only.
 It does not read clip markers inside individual clips.
-
