@@ -1,16 +1,19 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.1";
-  var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/marker-timestamps-premiere/master/update.json";
+  var CURRENT_VERSION = "1.2.2";
+  var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
+  var UPDATE_DOWNLOAD_URL = "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip";
   var csInterface = new CSInterface();
   var scanButton = document.getElementById("scanButton");
   var copyButton = document.getElementById("copyButton");
   var exportButton = document.getElementById("exportButton");
+  var checkUpdateButton = document.getElementById("checkUpdateButton");
   var output = document.getElementById("timestampOutput");
   var status = document.getElementById("status");
   var updateNotice = document.getElementById("updateNotice");
   var updateText = document.getElementById("updateText");
+  var downloadUpdateButton = document.getElementById("downloadUpdateButton");
   var successSound = document.getElementById("successSound");
 
   function setStatus(message, type) {
@@ -54,12 +57,22 @@
     return 0;
   }
 
-  function showUpdateNotice(latestVersion, message) {
+  function openExternalUrl(url) {
+    if (window.cep && window.cep.util && typeof window.cep.util.openURLInDefaultBrowser === "function") {
+      window.cep.util.openURLInDefaultBrowser(url);
+      return;
+    }
+
+    window.open(url, "_blank");
+  }
+
+  function showUpdateNotice(latestVersion, message, downloadUrl) {
     updateText.textContent = "Version " + latestVersion + " is available." + (message ? " " + message : "");
+    downloadUpdateButton.setAttribute("data-url", downloadUrl || UPDATE_DOWNLOAD_URL);
     updateNotice.hidden = false;
   }
 
-  function checkForUpdates() {
+  function checkForUpdates(showUpToDateMessage) {
     var request = new XMLHttpRequest();
     var url = UPDATE_CHECK_URL + "?t=" + new Date().getTime();
 
@@ -67,7 +80,14 @@
     request.timeout = 5000;
 
     request.onreadystatechange = function () {
-      if (request.readyState !== 4 || request.status < 200 || request.status >= 300) {
+      if (request.readyState !== 4) {
+        return;
+      }
+
+      if (request.status < 200 || request.status >= 300) {
+        if (showUpToDateMessage) {
+          setStatus("Could not check for updates.", "error");
+        }
         return;
       }
 
@@ -76,9 +96,21 @@
         var latestVersion = data.version || data.latestVersion;
 
         if (latestVersion && compareVersions(latestVersion, CURRENT_VERSION) > 0) {
-          showUpdateNotice(latestVersion, data.message || "");
+          showUpdateNotice(latestVersion, data.message || "", data.downloadUrl || data.url || UPDATE_DOWNLOAD_URL);
+        } else if (showUpToDateMessage) {
+          setStatus("You have the latest version.", "success");
         }
-      } catch (error) {}
+      } catch (error) {
+        if (showUpToDateMessage) {
+          setStatus("Could not read update information.", "error");
+        }
+      }
+    };
+
+    request.ontimeout = function () {
+      if (showUpToDateMessage) {
+        setStatus("Update check timed out.", "error");
+      }
     };
 
     request.send();
@@ -321,7 +353,14 @@
   scanButton.addEventListener("click", scanMarkers);
   copyButton.addEventListener("click", copyTimestamps);
   exportButton.addEventListener("click", exportTimestamps);
+  checkUpdateButton.addEventListener("click", function () {
+    setStatus("Checking for updates...", "");
+    checkForUpdates(true);
+  });
+  downloadUpdateButton.addEventListener("click", function () {
+    openExternalUrl(downloadUpdateButton.getAttribute("data-url") || UPDATE_DOWNLOAD_URL);
+  });
   output.addEventListener("input", updateCopyState);
   updateCopyState();
-  checkForUpdates();
+  checkForUpdates(false);
 }());

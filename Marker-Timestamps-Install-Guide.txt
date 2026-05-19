@@ -20,6 +20,8 @@ After a TXT file saves successfully, the extension plays a short success sound.
 
 If a newer extension version is published, the panel can show an update notice
 inside Premiere Pro.
+Users can also click "Check Update" inside the panel and download the newest
+complete package.
 
 
 ==================================================

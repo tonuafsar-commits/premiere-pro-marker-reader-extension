@@ -1,4 +1,5 @@
 {
-  "version": "1.2.1",
-  "message": "Latest release adds save-success sound support."
+  "version": "1.2.2",
+  "message": "Latest release adds a Check Update button and one-click update download.",
+  "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }
