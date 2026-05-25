@@ -19,6 +19,25 @@ MarkerTimestamps.formatSeconds = function (seconds) {
   return MarkerTimestamps.pad2(minutes) + ":" + MarkerTimestamps.pad2(remainingSeconds);
 };
 
+MarkerTimestamps.normalizeTimestampLines = function (content) {
+  content = String(content || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+
+  var lines = content.split("\n");
+  var normalized = [];
+  var index;
+  var line;
+
+  for (index = 0; index < lines.length; index += 1) {
+    line = String(lines[index]).replace(/^\s+|\s+$/g, "");
+
+    if (line) {
+      normalized.push(line);
+    }
+  }
+
+  return normalized.join("\r\n");
+};
+
 MarkerTimestamps.cleanMarkerName = function (name) {
   if (typeof name === "undefined" || name === null) {
     return "";
@@ -107,7 +126,7 @@ MarkerTimestamps.getActiveSequenceMarkerTimes = function () {
       marker = markers.getNextMarker(marker);
     }
 
-    return timestamps.join("\n");
+    return timestamps.join("\r\n");
   } catch (error) {
     return "ERROR:" + error.toString();
   }
@@ -135,7 +154,7 @@ MarkerTimestamps.saveTextFile = function (content) {
       return "ERROR:Could not open the selected file for writing.";
     }
 
-    file.write(content);
+    file.write(MarkerTimestamps.normalizeTimestampLines(content));
     file.close();
 
     return file.fsName;

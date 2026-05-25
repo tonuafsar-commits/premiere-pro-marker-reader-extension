@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.3";
+  var CURRENT_VERSION = "1.2.4";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_DOWNLOAD_URL = "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip";
   var csInterface = new CSInterface();
@@ -33,6 +33,20 @@
       .replace(/'/g, "\\'")
       .replace(/\r/g, "\\r")
       .replace(/\n/g, "\\n");
+  }
+
+  function normalizeTimestampLines(value) {
+    return String(value || "")
+      .replace(/\r\n/g, "\n")
+      .replace(/\r/g, "\n")
+      .split("\n")
+      .map(function (line) {
+        return line.replace(/^\s+|\s+$/g, "");
+      })
+      .filter(function (line) {
+        return line.length > 0;
+      })
+      .join("\r\n");
   }
 
   function compareVersions(left, right) {
@@ -200,7 +214,7 @@
 
   function writeCepFile(path, text) {
     var encoding = window.cep.encoding && window.cep.encoding.UTF8 ? window.cep.encoding.UTF8 : "UTF-8";
-    var result = window.cep.fs.writeFile(path, text, encoding);
+    var result = window.cep.fs.writeFile(path, normalizeTimestampLines(text), encoding);
 
     if (result && result.err === 0) {
       return true;
@@ -250,7 +264,7 @@
   }
 
   function saveWithHostDialog(text) {
-    csInterface.evalScript("MarkerTimestamps.saveTextFile('" + encodeForExtendScript(text) + "')", function (result) {
+    csInterface.evalScript("MarkerTimestamps.saveTextFile('" + encodeForExtendScript(normalizeTimestampLines(text)) + "')", function (result) {
       updateCopyState();
 
       if (typeof result === "string" && result.indexOf("ERROR:") === 0) {
@@ -295,13 +309,19 @@
   }
 
   function fallbackCopy(text) {
+    var originalValue = output.value;
+
+    output.value = normalizeTimestampLines(text);
     output.focus();
     output.select();
-    return document.execCommand("copy");
+
+    var copied = document.execCommand("copy");
+    output.value = originalValue;
+    return copied;
   }
 
   function copyTimestamps() {
-    var text = output.value.trim();
+    var text = normalizeTimestampLines(output.value);
 
     if (!text) {
       setStatus("Nothing to copy yet.", "error");
@@ -329,7 +349,7 @@
   }
 
   function exportTimestamps() {
-    var text = output.value.trim();
+    var text = normalizeTimestampLines(output.value);
 
     if (!text) {
       setStatus("Nothing to save yet.", "error");

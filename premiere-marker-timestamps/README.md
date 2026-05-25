@@ -1,6 +1,6 @@
 # Marker Timestamps for Adobe Premiere Pro
 
-Current version: `1.2.3`
+Current version: `1.2.4`
 
 A lightweight CEP extension that scans the currently active Premiere Pro sequence and lists its timeline marker times plus marker names in a copy-ready format.
 
@@ -13,6 +13,8 @@ Example output:
 ```
 
 For marker times under one hour, the panel outputs `mm:ss - name`. For marker times at one hour or later, it outputs `hh:mm:ss - name` because the hour is required to avoid ambiguity. Frames are ignored and never shown.
+
+Copied and saved timestamp lists use real line breaks so YouTube descriptions keep each timestamp on its own line.
 
 The panel can also show an in-panel update notice when a newer version is published through the hosted `update.json` file. Users can click `Check Update` and then `Download Update` to get the latest complete package. After a TXT export succeeds, it plays `assets/save-success.mp3` if that file is present; otherwise it plays a short built-in chime. This sound is panel-only and is never added to the Premiere project, timeline, render queue, or exported video/audio.
 
