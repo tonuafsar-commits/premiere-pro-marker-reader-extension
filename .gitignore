@@ -1,6 +1,7 @@
 installers/windows/bin/
 installers/windows/obj/
 installers/windows/publish/
+build/
 *.log
 *.tmp
 .DS_Store

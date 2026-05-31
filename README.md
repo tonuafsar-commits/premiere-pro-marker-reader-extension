@@ -28,8 +28,9 @@ The panel can show an update notice when the hosted `update.json` reports a newe
 
 Use the files in the `dist` folder:
 
+- `Marker-Timestamps-Complete-Package.zip` - best download for sharing with both Windows and macOS users.
 - `Marker-Timestamps-Premiere-Installer-Windows.exe` - easiest Windows installer.
-- `Marker-Timestamps-Premiere-Extension.zip` - manual Windows/macOS package.
+- `Marker-Timestamps-Premiere-Extension-Windows-Manual.zip` - manual Windows package.
 - `Marker-Timestamps-Premiere-Extension-macOS.zip` - macOS package with installer script.
 
 ## Windows Install

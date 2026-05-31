@@ -1,5 +1,5 @@
 {
-  "version": "1.2.4",
-  "message": "Latest release fixes TXT and YouTube paste line breaks.",
+  "version": "1.2.5",
+  "message": "Latest release cleans up Windows and macOS download packages.",
   "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }

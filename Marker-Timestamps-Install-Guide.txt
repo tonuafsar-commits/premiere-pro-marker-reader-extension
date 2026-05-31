@@ -30,10 +30,10 @@ WHAT TO SHARE
 
 Share this zip file:
 
-Marker-Timestamps-Premiere-Extension.zip
+Marker-Timestamps-Complete-Package.zip
 
-The user should extract the zip first, then run the installer for their
-operating system.
+The user should extract the zip first. It contains separate Windows and macOS
+folders so users only see files for their own operating system.
 
 If installation or usage fails, open:
 
@@ -46,17 +46,17 @@ WINDOWS INSTALLATION
 
 1. Close Adobe Premiere Pro completely.
 
-2. Extract the zip file:
+2. Extract the complete package:
 
-   Marker-Timestamps-Premiere-Extension.zip
+   Marker-Timestamps-Complete-Package.zip
 
-3. Open the extracted folder:
+3. Open:
 
-   premiere-marker-timestamps
+   Windows
 
 4. Double-click this file:
 
-   Install on Windows.bat
+   Marker-Timestamps-Premiere-Installer-Windows.exe
 
 5. If Windows shows a warning, choose:
 
@@ -79,25 +79,33 @@ MACOS INSTALLATION
 
 1. Close Adobe Premiere Pro completely.
 
-2. Extract the zip file:
+2. Extract the complete package:
 
-   Marker-Timestamps-Premiere-Extension.zip
+   Marker-Timestamps-Complete-Package.zip
 
-3. Open the extracted folder:
+3. Open:
+
+   macOS
+
+4. Extract:
+
+   Marker-Timestamps-Premiere-Extension-macOS.zip
+
+5. Open the extracted folder:
 
    premiere-marker-timestamps
 
-4. Do not double-click the installer the first time.
+6. Do not double-click the installer the first time.
 
    Right-click or Control-click this file:
 
    Install on macOS.command
 
-5. Choose:
+7. Choose:
 
    Open
 
-6. If macOS shows this warning:
+8. If macOS shows this warning:
 
    "Install on macOS.command" Not Opened
    Apple could not verify "Install on macOS.command" is free of malware.
@@ -126,11 +134,11 @@ MACOS INSTALLATION
 
    F. Choose Open.
 
-7. Wait until the installer says installation is complete.
+9. Wait until the installer says installation is complete.
 
-8. Restart Adobe Premiere Pro.
+10. Restart Adobe Premiere Pro.
 
-9. In Premiere Pro, open:
+11. In Premiere Pro, open:
 
    Window > Extensions > Marker Timestamps
 
