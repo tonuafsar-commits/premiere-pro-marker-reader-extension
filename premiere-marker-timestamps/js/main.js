@@ -1,15 +1,15 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.5";
+  var CURRENT_VERSION = "1.2.7";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_DOWNLOAD_URL = "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip";
   var csInterface = new CSInterface();
   var scanButton = document.getElementById("scanButton");
   var copyButton = document.getElementById("copyButton");
   var exportButton = document.getElementById("exportButton");
-  var checkUpdateButton = document.getElementById("checkUpdateButton");
   var output = document.getElementById("timestampOutput");
+  var timestampList = document.getElementById("timestampList");
   var status = document.getElementById("status");
   var updateNotice = document.getElementById("updateNotice");
   var updateText = document.getElementById("updateText");
@@ -35,7 +35,7 @@
       .replace(/\n/g, "\\n");
   }
 
-  function normalizeTimestampLines(value) {
+  function normalizeTimestampText(value, lineBreak) {
     return String(value || "")
       .replace(/\r\n/g, "\n")
       .replace(/\r/g, "\n")
@@ -46,7 +46,123 @@
       .filter(function (line) {
         return line.length > 0;
       })
-      .join("\r\n");
+      .join(lineBreak || "\n");
+  }
+
+  function normalizeTimestampLines(value) {
+    return normalizeTimestampText(value, "\n");
+  }
+
+  function parseTimestampSeconds(timestamp) {
+    var parts = String(timestamp || "").split(":");
+    var hours = 0;
+    var minutes = 0;
+    var seconds = 0;
+
+    if (parts.length === 2) {
+      minutes = parseInt(parts[0], 10);
+      seconds = parseInt(parts[1], 10);
+    } else if (parts.length === 3) {
+      hours = parseInt(parts[0], 10);
+      minutes = parseInt(parts[1], 10);
+      seconds = parseInt(parts[2], 10);
+    } else {
+      return null;
+    }
+
+    if (isNaN(hours) || isNaN(minutes) || isNaN(seconds)) {
+      return null;
+    }
+
+    return (hours * 3600) + (minutes * 60) + seconds;
+  }
+
+  function parseTimestampLine(line) {
+    var match = String(line || "").match(/^(\d{2}(?::\d{2}){1,2})(?:\s+-\s+(.*))?$/);
+    var seconds;
+
+    if (!match) {
+      return null;
+    }
+
+    seconds = parseTimestampSeconds(match[1]);
+    if (seconds === null) {
+      return null;
+    }
+
+    return {
+      time: match[1],
+      name: match[2] || "",
+      seconds: seconds,
+      line: String(line || "")
+    };
+  }
+
+  function markersFromText(text) {
+    return normalizeTimestampLines(text)
+      .split("\n")
+      .map(parseTimestampLine)
+      .filter(function (item) {
+        return !!item;
+      });
+  }
+
+  function markerLine(marker) {
+    if (marker && marker.line) {
+      return marker.line;
+    }
+
+    if (marker && marker.name) {
+      return marker.time + " - " + marker.name;
+    }
+
+    return marker ? marker.time : "";
+  }
+
+  function seekToMarker(seconds, label) {
+    var value = Number(seconds);
+
+    if (isNaN(value)) {
+      setStatus("Could not read that marker time.", "error");
+      return;
+    }
+
+    csInterface.evalScript("MarkerTimestamps.seekToSeconds(" + value + ")", function (result) {
+      if (typeof result === "string" && result.indexOf("ERROR:") === 0) {
+        setStatus(result.replace("ERROR:", ""), "error");
+        return;
+      }
+
+      setStatus("Playhead moved to " + label + ".", "success");
+    });
+  }
+
+  function renderTimestampList(markers) {
+    var items = markers || markersFromText(output.value);
+
+    timestampList.innerHTML = "";
+
+    items.forEach(function (marker) {
+      var row = document.createElement("div");
+      var button = document.createElement("button");
+      var name = document.createElement("span");
+
+      row.className = "timestampRow";
+      button.className = "timestampJump";
+      button.type = "button";
+      button.textContent = marker.time;
+      button.title = "Move playhead to " + marker.time;
+      name.className = "timestampName";
+      name.textContent = marker.name || "(unnamed marker)";
+
+      button.addEventListener("click", function () {
+        seekToMarker(marker.seconds, marker.time);
+      });
+
+      row.appendChild(button);
+      row.appendChild(name);
+      timestampList.appendChild(row);
+    });
   }
 
   function compareVersions(left, right) {
@@ -214,7 +330,7 @@
 
   function writeCepFile(path, text) {
     var encoding = window.cep.encoding && window.cep.encoding.UTF8 ? window.cep.encoding.UTF8 : "UTF-8";
-    var result = window.cep.fs.writeFile(path, normalizeTimestampLines(text), encoding);
+    var result = window.cep.fs.writeFile(path, normalizeTimestampText(text, "\n"), encoding);
 
     if (result && result.err === 0) {
       return true;
@@ -264,7 +380,7 @@
   }
 
   function saveWithHostDialog(text) {
-    csInterface.evalScript("MarkerTimestamps.saveTextFile('" + encodeForExtendScript(normalizeTimestampLines(text)) + "')", function (result) {
+    csInterface.evalScript("MarkerTimestamps.saveTextFile('" + encodeForExtendScript(normalizeTimestampText(text, "\n")) + "')", function (result) {
       updateCopyState();
 
       if (typeof result === "string" && result.indexOf("ERROR:") === 0) {
@@ -286,17 +402,29 @@
     scanButton.disabled = true;
     setStatus("Scanning active sequence markers...", "");
 
-    csInterface.evalScript("MarkerTimestamps.getActiveSequenceMarkerTimes()", function (result) {
+    csInterface.evalScript("MarkerTimestamps.getActiveSequenceMarkersJson()", function (result) {
+      var markers;
+      var lines;
+
       scanButton.disabled = false;
 
       if (typeof result === "string" && result.indexOf("ERROR:") === 0) {
         output.value = "";
+        renderTimestampList([]);
         updateCopyState();
         setStatus(result.replace("ERROR:", ""), "error");
         return;
       }
 
-      output.value = result || "";
+      try {
+        markers = JSON.parse(result || "[]");
+      } catch (error) {
+        markers = markersFromText(result || "");
+      }
+
+      lines = markers.map(markerLine);
+      output.value = normalizeTimestampLines(lines.join("\n"));
+      renderTimestampList(markers);
       updateCopyState();
 
       if (output.value.trim().length === 0) {
@@ -311,7 +439,7 @@
   function fallbackCopy(text) {
     var originalValue = output.value;
 
-    output.value = normalizeTimestampLines(text);
+    output.value = normalizeTimestampText(text, "\n");
     output.focus();
     output.select();
 
@@ -321,7 +449,7 @@
   }
 
   function copyTimestamps() {
-    var text = normalizeTimestampLines(output.value);
+    var text = normalizeTimestampText(output.value, "\n");
 
     if (!text) {
       setStatus("Nothing to copy yet.", "error");
@@ -349,7 +477,7 @@
   }
 
   function exportTimestamps() {
-    var text = normalizeTimestampLines(output.value);
+    var text = normalizeTimestampText(output.value, "\n");
 
     if (!text) {
       setStatus("Nothing to save yet.", "error");
@@ -379,14 +507,13 @@
   scanButton.addEventListener("click", scanMarkers);
   copyButton.addEventListener("click", copyTimestamps);
   exportButton.addEventListener("click", exportTimestamps);
-  checkUpdateButton.addEventListener("click", function () {
-    setStatus("Checking for updates...", "");
-    checkForUpdates(true);
-  });
   downloadUpdateButton.addEventListener("click", function () {
     openExternalUrl(downloadUpdateButton.getAttribute("data-url") || UPDATE_DOWNLOAD_URL);
   });
-  output.addEventListener("input", updateCopyState);
+  output.addEventListener("input", function () {
+    updateCopyState();
+    renderTimestampList();
+  });
   updateCopyState();
   checkForUpdates(false);
 }());

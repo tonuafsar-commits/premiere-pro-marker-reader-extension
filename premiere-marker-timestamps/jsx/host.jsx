@@ -35,7 +35,7 @@ MarkerTimestamps.normalizeTimestampLines = function (content) {
     }
   }
 
-  return normalized.join("\r\n");
+  return normalized.join("\n");
 };
 
 MarkerTimestamps.cleanMarkerName = function (name) {
@@ -102,6 +102,29 @@ MarkerTimestamps.getMarkerSeconds = function (marker) {
   return 0;
 };
 
+MarkerTimestamps.escapeJson = function (value) {
+  return String(value || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, "\\\"")
+    .replace(/\r/g, "\\r")
+    .replace(/\n/g, "\\n")
+    .replace(/\t/g, "\\t");
+};
+
+MarkerTimestamps.markerToJson = function (marker) {
+  var seconds = MarkerTimestamps.getMarkerSeconds(marker);
+  var timestamp = MarkerTimestamps.formatSeconds(seconds);
+  var name = MarkerTimestamps.cleanMarkerName(marker.name);
+  var line = name ? timestamp + " - " + name : timestamp;
+
+  return "{" +
+    "\"time\":\"" + MarkerTimestamps.escapeJson(timestamp) + "\"," +
+    "\"name\":\"" + MarkerTimestamps.escapeJson(name) + "\"," +
+    "\"seconds\":" + Number(seconds || 0) + "," +
+    "\"line\":\"" + MarkerTimestamps.escapeJson(line) + "\"" +
+  "}";
+};
+
 MarkerTimestamps.getActiveSequenceMarkerTimes = function () {
   try {
     if (!app || !app.project) {
@@ -127,6 +150,60 @@ MarkerTimestamps.getActiveSequenceMarkerTimes = function () {
     }
 
     return timestamps.join("\r\n");
+  } catch (error) {
+    return "ERROR:" + error.toString();
+  }
+};
+
+MarkerTimestamps.getActiveSequenceMarkersJson = function () {
+  try {
+    if (!app || !app.project) {
+      return "ERROR:Premiere Pro project is not available.";
+    }
+
+    var sequence = app.project.activeSequence;
+    if (!sequence) {
+      return "ERROR:No active sequence found. Open a timeline and try again.";
+    }
+
+    if (!sequence.markers) {
+      return "ERROR:This Premiere Pro version does not expose sequence markers to extensions.";
+    }
+
+    var markers = sequence.markers;
+    var marker = markers.getFirstMarker();
+    var jsonItems = [];
+
+    while (marker) {
+      jsonItems.push(MarkerTimestamps.markerToJson(marker));
+      marker = markers.getNextMarker(marker);
+    }
+
+    return "[" + jsonItems.join(",") + "]";
+  } catch (error) {
+    return "ERROR:" + error.toString();
+  }
+};
+
+MarkerTimestamps.seekToSeconds = function (seconds) {
+  try {
+    if (!app || !app.project) {
+      return "ERROR:Premiere Pro project is not available.";
+    }
+
+    var sequence = app.project.activeSequence;
+    if (!sequence) {
+      return "ERROR:No active sequence found. Open a timeline and try again.";
+    }
+
+    if (typeof sequence.setPlayerPosition !== "function") {
+      return "ERROR:This Premiere Pro version does not support playhead jumping from extensions.";
+    }
+
+    var ticks = Math.max(0, Math.round(Number(seconds || 0) * 254016000000));
+    sequence.setPlayerPosition(String(ticks));
+
+    return "OK";
   } catch (error) {
     return "ERROR:" + error.toString();
   }

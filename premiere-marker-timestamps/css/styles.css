@@ -95,7 +95,7 @@ h1 {
 
 .actions {
   display: grid;
-  grid-template-columns: 1fr auto auto auto;
+  grid-template-columns: 1fr auto auto;
   gap: 8px;
 }
 
@@ -141,6 +141,53 @@ button:disabled {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
+}
+
+.timestampList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.timestampList:empty {
+  display: none;
+}
+
+.timestampRow {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--panel);
+}
+
+.timestampJump {
+  min-width: 66px;
+  min-height: 24px;
+  padding: 0 8px;
+  background: #1f3d52;
+  border-color: #31617f;
+  color: var(--accent-hover);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 13px;
+}
+
+.timestampJump:hover:not(:disabled),
+.timestampJump:focus-visible:not(:disabled) {
+  background: #254c66;
+}
+
+.timestampName {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--text);
+  line-height: 1.35;
 }
 
 textarea {
