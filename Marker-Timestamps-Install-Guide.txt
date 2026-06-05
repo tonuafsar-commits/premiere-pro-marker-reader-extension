@@ -17,8 +17,8 @@ Example output:
 You can copy the full timestamp list directly from the extension panel, or
 save/share it as a .txt file in a location you choose.
 After a TXT file saves successfully, the extension plays a short success sound.
-If the same marker name appears more than once, the scanned list shows a red
-(!) badge beside each duplicate marker name.
+If the same marker name appears more than once, the main output box shows a
+red (!) badge beside each duplicate marker name.
 
 If a newer extension version is published, the panel can show an update notice
 inside Premiere Pro.
@@ -169,7 +169,7 @@ HOW TO USE THE EXTENSION
    01:42 - Product closeup
    03:08 - End screen
 
-6. Click any timestamp in the scanned list to move the Premiere Pro playhead
+6. Click any timestamp in the main output box to move the Premiere Pro playhead
    to that marker time.
 
 7. Click:

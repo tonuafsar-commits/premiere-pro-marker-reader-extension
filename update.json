@@ -1,5 +1,5 @@
 {
-  "version": "1.2.8",
-  "message": "Latest release marks duplicate marker names with a red warning badge.",
+  "version": "1.2.9",
+  "message": "Latest release integrates clickable timestamps and duplicate warnings into the main output box.",
   "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }
