@@ -95,7 +95,7 @@ h1 {
 
 .actions {
   display: grid;
-  grid-template-columns: 1fr auto auto auto;
+  grid-template-columns: 1fr auto auto;
   gap: 8px;
 }
 

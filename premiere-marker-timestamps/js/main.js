@@ -1,14 +1,13 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.6";
+  var CURRENT_VERSION = "1.2.7";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_DOWNLOAD_URL = "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip";
   var csInterface = new CSInterface();
   var scanButton = document.getElementById("scanButton");
   var copyButton = document.getElementById("copyButton");
   var exportButton = document.getElementById("exportButton");
-  var checkUpdateButton = document.getElementById("checkUpdateButton");
   var output = document.getElementById("timestampOutput");
   var timestampList = document.getElementById("timestampList");
   var status = document.getElementById("status");
@@ -508,10 +507,6 @@
   scanButton.addEventListener("click", scanMarkers);
   copyButton.addEventListener("click", copyTimestamps);
   exportButton.addEventListener("click", exportTimestamps);
-  checkUpdateButton.addEventListener("click", function () {
-    setStatus("Checking for updates...", "");
-    checkForUpdates(true);
-  });
   downloadUpdateButton.addEventListener("click", function () {
     openExternalUrl(downloadUpdateButton.getAttribute("data-url") || UPDATE_DOWNLOAD_URL);
   });

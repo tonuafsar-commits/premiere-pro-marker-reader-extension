@@ -1,6 +1,6 @@
 # Marker Timestamps for Adobe Premiere Pro
 
-Current version: `1.2.6`
+Current version: `1.2.7`
 
 A lightweight CEP extension that scans the currently active Premiere Pro sequence and lists its timeline marker times plus marker names in a copy-ready format.
 
@@ -18,7 +18,7 @@ Copied and saved timestamp lists use real line breaks so YouTube descriptions ke
 
 After scanning, each timestamp in the panel is clickable. Click a timestamp to move the active sequence playhead to that marker time.
 
-The panel can also show an in-panel update notice when a newer version is published through the hosted `update.json` file. Users can click `Check Update` and then `Download Update` to get the latest complete package. After a TXT export succeeds, it plays `assets/save-success.mp3` if that file is present; otherwise it plays a short built-in chime. This sound is panel-only and is never added to the Premiere project, timeline, render queue, or exported video/audio.
+The panel automatically shows an in-panel update notice when a newer version is published through the hosted `update.json` file. Users can click `Download Update` to get the latest complete package. After a TXT export succeeds, it plays `assets/save-success.mp3` if that file is present; otherwise it plays a short built-in chime. This sound is panel-only and is never added to the Premiere project, timeline, render queue, or exported video/audio.
 
 ## Files
 
@@ -127,6 +127,6 @@ Uninstall on macOS.command
 4. Click `Copy` to copy the timestamp and marker name list.
 5. Click `Save TXT` to choose a location and export the same list as a `.txt` file. The suggested file name uses the active sequence/timeline name.
 6. A success sound plays after the TXT file is saved.
-7. Click `Check Update` to manually check for a newer version. If one exists, click `Download Update`.
+7. If an update notice appears, click `Download Update` to get the latest complete package.
 
 The scanner reads sequence markers from `app.project.activeSequence.markers`, including each marker's `name` field. Clip markers are not included.
