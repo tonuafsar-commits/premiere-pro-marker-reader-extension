@@ -24,6 +24,8 @@ Frames are ignored and never shown.
 
 After scanning, each timestamp in the panel is clickable. Click a timestamp to move the active sequence playhead to that marker time.
 
+Duplicate marker names are marked with a red `(!)` badge in the scanned list.
+
 The panel can show an update notice when the hosted `update.json` reports a newer version.
 
 ## Download

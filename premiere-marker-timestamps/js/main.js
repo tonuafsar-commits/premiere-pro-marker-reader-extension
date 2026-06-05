@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.7";
+  var CURRENT_VERSION = "1.2.8";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_DOWNLOAD_URL = "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip";
   var csInterface = new CSInterface();
@@ -107,6 +107,30 @@
       });
   }
 
+  function duplicateNameKey(name) {
+    return String(name || "").replace(/^\s+|\s+$/g, "").toLowerCase();
+  }
+
+  function markDuplicateNames(markers) {
+    var counts = {};
+    var key;
+
+    markers.forEach(function (marker) {
+      key = duplicateNameKey(marker.name);
+
+      if (key) {
+        counts[key] = (counts[key] || 0) + 1;
+      }
+    });
+
+    markers.forEach(function (marker) {
+      key = duplicateNameKey(marker.name);
+      marker.isDuplicateName = !!(key && counts[key] > 1);
+    });
+
+    return markers;
+  }
+
   function markerLine(marker) {
     if (marker && marker.line) {
       return marker.line;
@@ -138,7 +162,7 @@
   }
 
   function renderTimestampList(markers) {
-    var items = markers || markersFromText(output.value);
+    var items = markDuplicateNames(markers || markersFromText(output.value));
 
     timestampList.innerHTML = "";
 
@@ -146,6 +170,7 @@
       var row = document.createElement("div");
       var button = document.createElement("button");
       var name = document.createElement("span");
+      var duplicateBadge;
 
       row.className = "timestampRow";
       button.className = "timestampJump";
@@ -154,6 +179,15 @@
       button.title = "Move playhead to " + marker.time;
       name.className = "timestampName";
       name.textContent = marker.name || "(unnamed marker)";
+
+      if (marker.isDuplicateName) {
+        duplicateBadge = document.createElement("span");
+        duplicateBadge.className = "duplicateBadge";
+        duplicateBadge.textContent = "(!)";
+        duplicateBadge.title = "This marker name is used more than once.";
+        name.appendChild(document.createTextNode(" "));
+        name.appendChild(duplicateBadge);
+      }
 
       button.addEventListener("click", function () {
         seekToMarker(marker.seconds, marker.time);
