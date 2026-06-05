@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.8";
+  var CURRENT_VERSION = "1.2.9";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_DOWNLOAD_URL = "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip";
   var csInterface = new CSInterface();
@@ -9,12 +9,12 @@
   var copyButton = document.getElementById("copyButton");
   var exportButton = document.getElementById("exportButton");
   var output = document.getElementById("timestampOutput");
-  var timestampList = document.getElementById("timestampList");
   var status = document.getElementById("status");
   var updateNotice = document.getElementById("updateNotice");
   var updateText = document.getElementById("updateText");
   var downloadUpdateButton = document.getElementById("downloadUpdateButton");
   var successSound = document.getElementById("successSound");
+  var currentOutputText = "";
 
   function setStatus(message, type) {
     status.textContent = message;
@@ -22,7 +22,7 @@
   }
 
   function updateCopyState() {
-    var hasText = output.value.trim().length > 0;
+    var hasText = currentOutputText.trim().length > 0;
     copyButton.disabled = !hasText;
     exportButton.disabled = !hasText;
   }
@@ -161,10 +161,18 @@
     });
   }
 
-  function renderTimestampList(markers) {
-    var items = markDuplicateNames(markers || markersFromText(output.value));
+  function renderOutput(markers) {
+    var items = markDuplicateNames(markers || markersFromText(currentOutputText));
 
-    timestampList.innerHTML = "";
+    output.innerHTML = "";
+
+    if (!items.length) {
+      var placeholder = document.createElement("span");
+      placeholder.className = "outputPlaceholder";
+      placeholder.innerHTML = "00:15 - Intro<br>01:42 - Product closeup<br>03:08 - End screen";
+      output.appendChild(placeholder);
+      return;
+    }
 
     items.forEach(function (marker) {
       var row = document.createElement("div");
@@ -195,7 +203,7 @@
 
       row.appendChild(button);
       row.appendChild(name);
-      timestampList.appendChild(row);
+      output.appendChild(row);
     });
   }
 
@@ -443,8 +451,8 @@
       scanButton.disabled = false;
 
       if (typeof result === "string" && result.indexOf("ERROR:") === 0) {
-        output.value = "";
-        renderTimestampList([]);
+        currentOutputText = "";
+        renderOutput([]);
         updateCopyState();
         setStatus(result.replace("ERROR:", ""), "error");
         return;
@@ -457,33 +465,38 @@
       }
 
       lines = markers.map(markerLine);
-      output.value = normalizeTimestampLines(lines.join("\n"));
-      renderTimestampList(markers);
+      currentOutputText = normalizeTimestampLines(lines.join("\n"));
+      renderOutput(markers);
       updateCopyState();
 
-      if (output.value.trim().length === 0) {
+      if (currentOutputText.trim().length === 0) {
         setStatus("No markers found in the active sequence.", "");
       } else {
-        var count = output.value.split(/\r?\n/).filter(Boolean).length;
+        var count = currentOutputText.split(/\r?\n/).filter(Boolean).length;
         setStatus(count + " marker" + (count === 1 ? "" : "s") + " found.", "success");
       }
     });
   }
 
   function fallbackCopy(text) {
-    var originalValue = output.value;
+    var temporaryInput = document.createElement("textarea");
+    var copied;
 
-    output.value = normalizeTimestampText(text, "\n");
-    output.focus();
-    output.select();
+    temporaryInput.value = normalizeTimestampText(text, "\n");
+    temporaryInput.setAttribute("readonly", "readonly");
+    temporaryInput.style.position = "fixed";
+    temporaryInput.style.left = "-9999px";
+    document.body.appendChild(temporaryInput);
+    temporaryInput.focus();
+    temporaryInput.select();
 
-    var copied = document.execCommand("copy");
-    output.value = originalValue;
+    copied = document.execCommand("copy");
+    document.body.removeChild(temporaryInput);
     return copied;
   }
 
   function copyTimestamps() {
-    var text = normalizeTimestampText(output.value, "\n");
+    var text = normalizeTimestampText(currentOutputText, "\n");
 
     if (!text) {
       setStatus("Nothing to copy yet.", "error");
@@ -511,7 +524,7 @@
   }
 
   function exportTimestamps() {
-    var text = normalizeTimestampText(output.value, "\n");
+    var text = normalizeTimestampText(currentOutputText, "\n");
 
     if (!text) {
       setStatus("Nothing to save yet.", "error");
@@ -544,10 +557,7 @@
   downloadUpdateButton.addEventListener("click", function () {
     openExternalUrl(downloadUpdateButton.getAttribute("data-url") || UPDATE_DOWNLOAD_URL);
   });
-  output.addEventListener("input", function () {
-    updateCopyState();
-    renderTimestampList();
-  });
   updateCopyState();
+  renderOutput([]);
   checkForUpdates(false);
 }());
