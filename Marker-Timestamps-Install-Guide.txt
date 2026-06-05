@@ -167,21 +167,24 @@ HOW TO USE THE EXTENSION
    01:42 - Product closeup
    03:08 - End screen
 
-6. Click:
+6. Click any timestamp in the scanned list to move the Premiere Pro playhead
+   to that marker time.
+
+7. Click:
 
    Copy
 
-7. To create a shareable text file, click:
+8. To create a shareable text file, click:
 
    Save TXT
 
-8. Choose where to save the .txt file.
+9. Choose where to save the .txt file.
 
    The file name will be suggested from the active timeline/sequence name.
 
-9. A success sound will play after the .txt file is saved.
+10. A success sound will play after the .txt file is saved.
 
-10. Paste the copied timestamps anywhere you want, or share the saved .txt file,
+11. Paste the copied timestamps anywhere you want, or share the saved .txt file,
    such as:
 
    - YouTube description

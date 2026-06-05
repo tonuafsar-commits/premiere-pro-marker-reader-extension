@@ -22,6 +22,8 @@ Example:
 
 Frames are ignored and never shown.
 
+After scanning, each timestamp in the panel is clickable. Click a timestamp to move the active sequence playhead to that marker time.
+
 The panel can show an update notice when the hosted `update.json` reports a newer version.
 
 ## Download
@@ -58,8 +60,9 @@ Windows may show an unknown publisher warning because the installer is not code-
 2. Activate the sequence/timeline that contains sequence markers.
 3. Open `Window > Extensions > Marker Timestamps`.
 4. Click `Scan Markers`.
-5. Click `Copy`.
-6. Click `Save TXT` to export a `.txt` file. The suggested file name uses the active sequence/timeline name.
+5. Click any timestamp in the scanned list to move the playhead to that marker time.
+6. Click `Copy`.
+7. Click `Save TXT` to export a `.txt` file. The suggested file name uses the active sequence/timeline name.
 
 The extension reads sequence markers from `app.project.activeSequence.markers`. Clip markers inside individual video/audio clips are not included.
 

@@ -1,6 +1,6 @@
 # Marker Timestamps for Adobe Premiere Pro
 
-Current version: `1.2.5`
+Current version: `1.2.6`
 
 A lightweight CEP extension that scans the currently active Premiere Pro sequence and lists its timeline marker times plus marker names in a copy-ready format.
 
@@ -15,6 +15,8 @@ Example output:
 For marker times under one hour, the panel outputs `mm:ss - name`. For marker times at one hour or later, it outputs `hh:mm:ss - name` because the hour is required to avoid ambiguity. Frames are ignored and never shown.
 
 Copied and saved timestamp lists use real line breaks so YouTube descriptions keep each timestamp on its own line.
+
+After scanning, each timestamp in the panel is clickable. Click a timestamp to move the active sequence playhead to that marker time.
 
 The panel can also show an in-panel update notice when a newer version is published through the hosted `update.json` file. Users can click `Check Update` and then `Download Update` to get the latest complete package. After a TXT export succeeds, it plays `assets/save-success.mp3` if that file is present; otherwise it plays a short built-in chime. This sound is panel-only and is never added to the Premiere project, timeline, render queue, or exported video/audio.
 
@@ -121,9 +123,10 @@ Uninstall on macOS.command
 
 1. Open a Premiere Pro project and activate the sequence timeline.
 2. Click `Scan Markers`.
-3. Click `Copy` to copy the timestamp and marker name list.
-4. Click `Save TXT` to choose a location and export the same list as a `.txt` file. The suggested file name uses the active sequence/timeline name.
-5. A success sound plays after the TXT file is saved.
-6. Click `Check Update` to manually check for a newer version. If one exists, click `Download Update`.
+3. Click any timestamp in the scanned list to move the playhead to that marker time.
+4. Click `Copy` to copy the timestamp and marker name list.
+5. Click `Save TXT` to choose a location and export the same list as a `.txt` file. The suggested file name uses the active sequence/timeline name.
+6. A success sound plays after the TXT file is saved.
+7. Click `Check Update` to manually check for a newer version. If one exists, click `Download Update`.
 
 The scanner reads sequence markers from `app.project.activeSequence.markers`, including each marker's `name` field. Clip markers are not included.
