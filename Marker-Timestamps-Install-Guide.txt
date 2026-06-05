@@ -17,6 +17,8 @@ Example output:
 You can copy the full timestamp list directly from the extension panel, or
 save/share it as a .txt file in a location you choose.
 After a TXT file saves successfully, the extension plays a short success sound.
+If the same marker name appears more than once, the scanned list shows a red
+(!) badge beside each duplicate marker name.
 
 If a newer extension version is published, the panel can show an update notice
 inside Premiere Pro.

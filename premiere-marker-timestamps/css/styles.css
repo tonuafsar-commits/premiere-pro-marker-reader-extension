@@ -190,6 +190,11 @@ button:disabled {
   line-height: 1.35;
 }
 
+.duplicateBadge {
+  color: #ff3b30;
+  font-weight: 700;
+}
+
 textarea {
   flex: 1;
   width: 100%;

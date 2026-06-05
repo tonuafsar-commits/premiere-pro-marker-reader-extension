@@ -1,5 +1,5 @@
 {
-  "version": "1.2.7",
-  "message": "Latest release adds clickable timestamps, automatic update notices, and fixes YouTube paste line breaks.",
+  "version": "1.2.8",
+  "message": "Latest release marks duplicate marker names with a red warning badge.",
   "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }
