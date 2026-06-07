@@ -252,13 +252,6 @@ button:disabled {
   font-weight: 700;
 }
 
-.footerHint {
-  padding: 9px 16px 13px;
-  border-top: 1px solid var(--line);
-  color: var(--subtle);
-  font-size: 11px;
-}
-
 @keyframes panelIn {
   from {
     opacity: 0;
