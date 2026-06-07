@@ -9,7 +9,10 @@
   <body>
     <main class="panel">
       <header class="header">
-        <h1>Marker Timestamps</h1>
+        <div class="titleRow">
+          <h1>Marker Timestamps</h1>
+          <span class="version">v1.2.11</span>
+        </div>
         <p id="status" class="status">Open a sequence, then scan its timeline markers.</p>
       </header>
 
@@ -20,15 +23,15 @@
       </section>
 
       <section class="actions" aria-label="Marker timestamp actions">
-        <button id="scanButton" type="button">Scan Markers</button>
+        <button id="scanButton" type="button">Scan</button>
         <button id="copyButton" type="button" disabled>Copy</button>
         <button id="exportButton" type="button" disabled>Save TXT</button>
       </section>
 
-      <label class="outputLabel" for="timestampOutput">Timestamps and Names</label>
       <div id="timestampOutput" class="timestampOutput" role="textbox" aria-readonly="true" tabindex="0" aria-label="Timestamps and names">
         <span class="outputPlaceholder">00:15 - Intro<br>01:42 - Product closeup<br>03:08 - End screen</span>
       </div>
+      <div class="footerHint">Ready to copy or export clean YouTube-style timestamps.</div>
       <audio id="successSound" src="./assets/save-success.mp3" preload="auto"></audio>
     </main>
 

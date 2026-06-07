@@ -107,7 +107,24 @@ MACOS INSTALLATION
 
    Open
 
-8. If macOS shows this warning:
+8. If macOS says the file does not have appropriate access privileges,
+   use this Terminal fallback:
+
+   A. Open Terminal.
+
+   B. Type this, but do not press Return yet:
+
+      bash 
+
+      Important: there is a space after "bash".
+
+   C. Drag "Install on macOS.command" into the Terminal window.
+
+   D. Press Return.
+
+   This also avoids the executable-permission problem.
+
+9. If macOS shows this warning:
 
    "Install on macOS.command" Not Opened
    Apple could not verify "Install on macOS.command" is free of malware.
@@ -136,11 +153,11 @@ MACOS INSTALLATION
 
    F. Choose Open.
 
-9. Wait until the installer says installation is complete.
+10. Wait until the installer says installation is complete.
 
-10. Restart Adobe Premiere Pro.
+11. Restart Adobe Premiere Pro.
 
-11. In Premiere Pro, open:
+12. In Premiere Pro, open:
 
    Window > Extensions > Marker Timestamps
 

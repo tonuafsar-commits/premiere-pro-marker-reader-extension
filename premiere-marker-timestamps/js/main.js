@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.10";
+  var CURRENT_VERSION = "1.2.11";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_DOWNLOAD_URL = "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip";
   var csInterface = new CSInterface();
@@ -174,13 +174,14 @@
       return;
     }
 
-    items.forEach(function (marker) {
+    items.forEach(function (marker, index) {
       var row = document.createElement("div");
       var button = document.createElement("button");
       var name = document.createElement("span");
       var duplicateBadge;
 
       row.className = "timestampRow";
+      row.style.animationDelay = Math.min(420, 90 + (index * 35)) + "ms";
       button.className = "timestampJump";
       button.type = "button";
       button.textContent = marker.time;
