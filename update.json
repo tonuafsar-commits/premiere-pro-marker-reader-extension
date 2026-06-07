@@ -1,5 +1,5 @@
 {
-  "version": "1.2.9",
-  "message": "Latest release integrates clickable timestamps and duplicate warnings into the main output box.",
+  "version": "1.2.10",
+  "message": "macOS installer compatibility update: fixes script permissions, line endings, and adds a Terminal fallback while keeping Windows install smooth.",
   "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }

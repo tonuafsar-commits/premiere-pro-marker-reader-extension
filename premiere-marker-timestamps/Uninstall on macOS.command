@@ -1,5 +1,5 @@
-#!/bin/bash
-set -e
+#!/bin/sh
+set -eu
 
 EXTENSION_ID="premiere-marker-timestamps"
 TARGET_DIR="$HOME/Library/Application Support/Adobe/CEP/extensions/$EXTENSION_ID"

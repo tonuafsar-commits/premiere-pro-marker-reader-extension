@@ -1,5 +1,5 @@
-#!/bin/bash
-set -e
+#!/bin/sh
+set -eu
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
@@ -23,6 +23,7 @@ rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 
 cp -R "$EXTENSION_DIR" "$BUILD_DIR/"
+find "$BUILD_DIR" -name "*.command" -exec chmod 755 {} \;
 
 if [ -f "$GUIDE_FILE" ]; then
   cp "$GUIDE_FILE" "$BUILD_DIR/"

@@ -1,6 +1,6 @@
 # Marker Timestamps for Adobe Premiere Pro
 
-Current version: `1.2.9`
+Current version: `1.2.10`
 
 A lightweight CEP extension that scans the currently active Premiere Pro sequence and lists its timeline marker times plus marker names in a copy-ready format.
 
@@ -74,6 +74,14 @@ Then choose:
 ```text
 Open
 ```
+
+If macOS says the file does not have appropriate access privileges, open Terminal and run the installer through `bash`. This does not require executable permission:
+
+```text
+bash "/path/to/premiere-marker-timestamps/Install on macOS.command"
+```
+
+Tip: type `bash ` with a space at the end, drag `Install on macOS.command` into Terminal, then press Return.
 
 If macOS shows `Apple could not verify "Install on macOS.command" is free of malware` and only offers `Move to Trash` or `Done`, open the included file:
 

@@ -1,5 +1,5 @@
-#!/bin/bash
-set -e
+#!/bin/sh
+set -eu
 
 EXTENSION_ID="premiere-marker-timestamps"
 SOURCE_DIR="$(cd "$(dirname "$0")" && pwd)"

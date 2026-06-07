@@ -53,8 +53,14 @@ Windows may show an unknown publisher warning because the installer is not code-
 2. Extract the zip.
 3. Open the `premiere-marker-timestamps` folder.
 4. Right-click `Install on macOS.command` and choose `Open`.
-5. Restart Premiere Pro.
-6. Open `Window > Extensions > Marker Timestamps`.
+5. If macOS says the file does not have appropriate access privileges, open Terminal and run:
+
+   ```text
+   bash "/path/to/premiere-marker-timestamps/Install on macOS.command"
+   ```
+
+6. Restart Premiere Pro.
+7. Open `Window > Extensions > Marker Timestamps`.
 
 ## Usage
 
@@ -75,3 +81,11 @@ The CEP extension source lives in `premiere-marker-timestamps`.
 The Windows installer source lives in `installers/windows`.
 
 The macOS DMG builder helper lives in `installers/macos`.
+
+Build release ZIPs from the project root with:
+
+```text
+python build-release.py
+```
+
+This builder preserves executable permissions for macOS `.command` files and normalizes text scripts to LF line endings.
