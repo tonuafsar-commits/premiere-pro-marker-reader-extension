@@ -1,6 +1,6 @@
 # Marker Timestamps for Adobe Premiere Pro
 
-Current version: `1.2.13`
+Current version: `1.2.14`
 
 A lightweight CEP extension that scans the currently active Premiere Pro sequence and lists its timeline marker times plus marker names in a copy-ready format.
 

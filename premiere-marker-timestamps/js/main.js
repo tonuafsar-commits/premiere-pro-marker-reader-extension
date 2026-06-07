@@ -1,8 +1,12 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.13";
+  var CURRENT_VERSION = "1.2.14";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
+  var UPDATE_CHECK_URLS = [
+    UPDATE_CHECK_URL,
+    "https://cdn.jsdelivr.net/gh/tonuafsar-commits/premiere-pro-marker-reader-extension@master/update.json"
+  ];
   var UPDATE_DOWNLOAD_URL = "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip";
   var csInterface = new CSInterface();
   var scanButton = document.getElementById("scanButton");
@@ -12,6 +16,7 @@
   var status = document.getElementById("status");
   var updateNotice = document.getElementById("updateNotice");
   var updateText = document.getElementById("updateText");
+  var checkUpdateButton = document.getElementById("checkUpdateButton");
   var downloadUpdateButton = document.getElementById("downloadUpdateButton");
   var successSound = document.getElementById("successSound");
   var currentOutputText = "";
@@ -243,50 +248,59 @@
     updateText.textContent = "Version " + latestVersion + " is available." + (message ? " " + message : "");
     downloadUpdateButton.setAttribute("data-url", downloadUrl || UPDATE_DOWNLOAD_URL);
     updateNotice.hidden = false;
+    setStatus("Update available: version " + latestVersion + ".", "success");
   }
 
   function checkForUpdates(showUpToDateMessage) {
-    var request = new XMLHttpRequest();
-    var url = UPDATE_CHECK_URL + "?t=" + new Date().getTime();
+    var urls = UPDATE_CHECK_URLS.slice(0);
 
-    request.open("GET", url, true);
-    request.timeout = 5000;
+    function tryNextUrl() {
+      var request;
+      var url;
 
-    request.onreadystatechange = function () {
-      if (request.readyState !== 4) {
-        return;
-      }
-
-      if (request.status < 200 || request.status >= 300) {
+      if (!urls.length) {
         if (showUpToDateMessage) {
-          setStatus("Could not check for updates.", "error");
+          setStatus("Could not check for updates. Please check your internet connection.", "error");
         }
         return;
       }
 
-      try {
-        var data = JSON.parse(request.responseText);
-        var latestVersion = data.version || data.latestVersion;
+      request = new XMLHttpRequest();
+      url = urls.shift() + "?t=" + new Date().getTime();
 
-        if (latestVersion && compareVersions(latestVersion, CURRENT_VERSION) > 0) {
-          showUpdateNotice(latestVersion, data.message || "", data.downloadUrl || data.url || UPDATE_DOWNLOAD_URL);
-        } else if (showUpToDateMessage) {
-          setStatus("You have the latest version.", "success");
+      request.open("GET", url, true);
+      request.timeout = 6000;
+
+      request.onreadystatechange = function () {
+        if (request.readyState !== 4) {
+          return;
         }
-      } catch (error) {
-        if (showUpToDateMessage) {
-          setStatus("Could not read update information.", "error");
+
+        if (request.status < 200 || request.status >= 300) {
+          tryNextUrl();
+          return;
         }
-      }
-    };
 
-    request.ontimeout = function () {
-      if (showUpToDateMessage) {
-        setStatus("Update check timed out.", "error");
-      }
-    };
+        try {
+          var data = JSON.parse(request.responseText);
+          var latestVersion = data.version || data.latestVersion;
 
-    request.send();
+          if (latestVersion && compareVersions(latestVersion, CURRENT_VERSION) > 0) {
+            showUpdateNotice(latestVersion, data.message || "", data.downloadUrl || data.url || UPDATE_DOWNLOAD_URL);
+          } else if (showUpToDateMessage) {
+            setStatus("You have the latest version.", "success");
+          }
+        } catch (error) {
+          tryNextUrl();
+        }
+      };
+
+      request.onerror = tryNextUrl;
+      request.ontimeout = tryNextUrl;
+      request.send();
+    }
+
+    tryNextUrl();
   }
 
   function playFallbackChime() {
@@ -555,6 +569,10 @@
   scanButton.addEventListener("click", scanMarkers);
   copyButton.addEventListener("click", copyTimestamps);
   exportButton.addEventListener("click", exportTimestamps);
+  checkUpdateButton.addEventListener("click", function () {
+    setStatus("Checking for updates...", "");
+    checkForUpdates(true);
+  });
   downloadUpdateButton.addEventListener("click", function () {
     openExternalUrl(downloadUpdateButton.getAttribute("data-url") || UPDATE_DOWNLOAD_URL);
   });

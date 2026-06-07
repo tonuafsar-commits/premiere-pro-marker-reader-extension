@@ -1,5 +1,5 @@
 {
-  "version": "1.2.13",
-  "message": "Cleaner blended panel UI with footer hint removed and compact cross-platform package retained.",
+  "version": "1.2.14",
+  "message": "More reliable update notification with manual check and fallback update endpoint.",
   "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }
