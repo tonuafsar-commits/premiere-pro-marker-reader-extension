@@ -15,7 +15,6 @@ DIST_DIR = ROOT / "dist"
 MAC_ZIP = DIST_DIR / "Marker-Timestamps-Premiere-Extension-macOS.zip"
 WINDOWS_ZIP = DIST_DIR / "Marker-Timestamps-Premiere-Extension-Windows-Manual.zip"
 COMPLETE_ZIP = DIST_DIR / "Marker-Timestamps-Complete-Package.zip"
-WINDOWS_EXE = DIST_DIR / "Marker-Timestamps-Premiere-Installer-Windows.exe"
 
 TEXT_SUFFIXES = {
     ".bat",
@@ -77,8 +76,6 @@ def build_complete_zip() -> None:
         add_file(archive, ROOT / "Marker-Timestamps-Install-Guide.txt", Path("Marker-Timestamps-Install-Guide.txt"))
         add_file(archive, MAC_ZIP, Path("macOS") / MAC_ZIP.name, binary=True)
         add_file(archive, WINDOWS_ZIP, Path("Windows") / WINDOWS_ZIP.name, binary=True)
-        if WINDOWS_EXE.exists():
-            add_file(archive, WINDOWS_EXE, Path("Windows") / WINDOWS_EXE.name, binary=True)
 
 
 def add_tree(archive: zipfile.ZipFile, source: Path, archive_root: Path, *, platform: str) -> None:

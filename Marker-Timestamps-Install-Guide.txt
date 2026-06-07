@@ -34,8 +34,9 @@ Share this zip file:
 
 Marker-Timestamps-Complete-Package.zip
 
-The user should extract the zip first. It contains separate Windows and macOS
-folders so users only see files for their own operating system.
+The user should extract the zip first. It contains compact Windows and macOS
+installer zip files. The separate Windows EXE is still available in the dist
+folder for users who want the easiest Windows-only installer.
 
 If installation or usage fails, open:
 
@@ -56,19 +57,23 @@ WINDOWS INSTALLATION
 
    Windows
 
-4. Double-click this file:
+4. Extract:
 
-   Marker-Timestamps-Premiere-Installer-Windows.exe
+   Marker-Timestamps-Premiere-Extension-Windows-Manual.zip
 
-5. If Windows shows a warning, choose:
+5. Open the extracted folder:
 
-   More info > Run anyway
+   premiere-marker-timestamps
 
-6. Wait until the installer says installation is complete.
+6. Double-click this file:
 
-7. Restart Adobe Premiere Pro.
+   Install on Windows.bat
 
-8. In Premiere Pro, open:
+7. Wait until the installer says installation is complete.
+
+8. Restart Adobe Premiere Pro.
+
+9. In Premiere Pro, open:
 
    Window > Extensions > Marker Timestamps
 

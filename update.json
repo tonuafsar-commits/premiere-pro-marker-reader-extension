@@ -1,5 +1,5 @@
 {
-  "version": "1.2.11",
-  "message": "Apple-style glass UI refresh with smoother minimal animation, while keeping Windows and macOS installation simple.",
+  "version": "1.2.12",
+  "message": "Compact release package under 50 MB while keeping Windows and macOS installers simple and compatible.",
   "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }
