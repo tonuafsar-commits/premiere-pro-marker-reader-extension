@@ -1,5 +1,5 @@
 {
-  "version": "1.2.14",
-  "message": "More reliable update notification with manual check and fallback update endpoint.",
+  "version": "1.2.15",
+  "message": "Update checker now prefers fresher endpoints and handles stale GitHub Raw cache more reliably.",
   "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }

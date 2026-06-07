@@ -1,11 +1,12 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.14";
+  var CURRENT_VERSION = "1.2.15";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_CHECK_URLS = [
+    "https://cdn.jsdelivr.net/gh/tonuafsar-commits/premiere-pro-marker-reader-extension@master/update.json",
     UPDATE_CHECK_URL,
-    "https://cdn.jsdelivr.net/gh/tonuafsar-commits/premiere-pro-marker-reader-extension@master/update.json"
+    "https://api.github.com/repos/tonuafsar-commits/premiere-pro-marker-reader-extension/contents/update.json?ref=master"
   ];
   var UPDATE_DOWNLOAD_URL = "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip";
   var csInterface = new CSInterface();
@@ -253,14 +254,20 @@
 
   function checkForUpdates(showUpToDateMessage) {
     var urls = UPDATE_CHECK_URLS.slice(0);
+    var bestUpdate = null;
 
     function tryNextUrl() {
       var request;
       var url;
 
       if (!urls.length) {
+        if (bestUpdate && compareVersions(bestUpdate.version, CURRENT_VERSION) > 0) {
+          showUpdateNotice(bestUpdate.version, bestUpdate.message || "", bestUpdate.downloadUrl || bestUpdate.url || UPDATE_DOWNLOAD_URL);
+          return;
+        }
+
         if (showUpToDateMessage) {
-          setStatus("Could not check for updates. Please check your internet connection.", "error");
+          setStatus(bestUpdate ? "You have the latest version." : "Could not check for updates. Please check your internet connection.", bestUpdate ? "success" : "error");
         }
         return;
       }
@@ -282,14 +289,15 @@
         }
 
         try {
-          var data = JSON.parse(request.responseText);
+          var data = parseUpdateResponse(request.responseText);
           var latestVersion = data.version || data.latestVersion;
 
-          if (latestVersion && compareVersions(latestVersion, CURRENT_VERSION) > 0) {
-            showUpdateNotice(latestVersion, data.message || "", data.downloadUrl || data.url || UPDATE_DOWNLOAD_URL);
-          } else if (showUpToDateMessage) {
-            setStatus("You have the latest version.", "success");
+          if (latestVersion && (!bestUpdate || compareVersions(latestVersion, bestUpdate.version) > 0)) {
+            bestUpdate = data;
+            bestUpdate.version = latestVersion;
           }
+
+          tryNextUrl();
         } catch (error) {
           tryNextUrl();
         }
@@ -301,6 +309,16 @@
     }
 
     tryNextUrl();
+  }
+
+  function parseUpdateResponse(responseText) {
+    var data = JSON.parse(responseText);
+
+    if (data && data.encoding === "base64" && data.content) {
+      return JSON.parse(atob(String(data.content).replace(/\s/g, "")));
+    }
+
+    return data;
   }
 
   function playFallbackChime() {
