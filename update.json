@@ -1,5 +1,5 @@
 {
-  "version": "1.2.15",
-  "message": "Update checker now prefers fresher endpoints and handles stale GitHub Raw cache more reliably.",
+  "version": "1.2.16",
+  "message": "TXT export and copy now use CRLF line breaks for better YouTube description paste compatibility.",
   "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }

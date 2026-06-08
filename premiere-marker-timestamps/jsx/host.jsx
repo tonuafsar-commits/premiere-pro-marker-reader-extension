@@ -38,6 +38,10 @@ MarkerTimestamps.normalizeTimestampLines = function (content) {
   return normalized.join("\n");
 };
 
+MarkerTimestamps.normalizeTimestampFileText = function (content) {
+  return MarkerTimestamps.normalizeTimestampLines(content).replace(/\n/g, "\r\n");
+};
+
 MarkerTimestamps.cleanMarkerName = function (name) {
   if (typeof name === "undefined" || name === null) {
     return "";
@@ -231,7 +235,7 @@ MarkerTimestamps.saveTextFile = function (content) {
       return "ERROR:Could not open the selected file for writing.";
     }
 
-    file.write(MarkerTimestamps.normalizeTimestampLines(content));
+    file.write(MarkerTimestamps.normalizeTimestampFileText(content));
     file.close();
 
     return file.fsName;

@@ -1,6 +1,6 @@
 # Marker Timestamps for Adobe Premiere Pro
 
-Current version: `1.2.15`
+Current version: `1.2.16`
 
 A lightweight CEP extension that scans the currently active Premiere Pro sequence and lists its timeline marker times plus marker names in a copy-ready format.
 
@@ -14,7 +14,7 @@ Example output:
 
 For marker times under one hour, the panel outputs `mm:ss - name`. For marker times at one hour or later, it outputs `hh:mm:ss - name` because the hour is required to avoid ambiguity. Frames are ignored and never shown.
 
-Copied and saved timestamp lists use real line breaks so YouTube descriptions keep each timestamp on its own line.
+Copied and saved timestamp lists use CRLF line breaks so YouTube descriptions keep each timestamp on its own line across macOS and Windows.
 
 After scanning, each timestamp in the main output box is clickable. Click a timestamp to move the active sequence playhead to that marker time.
 
