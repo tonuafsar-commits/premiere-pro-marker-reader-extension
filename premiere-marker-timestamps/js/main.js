@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.18";
+  var CURRENT_VERSION = "1.2.19";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_CHECK_URLS = [
     "https://cdn.jsdelivr.net/gh/tonuafsar-commits/premiere-pro-marker-reader-extension@master/update.json",
