@@ -1,12 +1,12 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.22";
+  var CURRENT_VERSION = "1.2.23";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_CHECK_URLS = [
-    "https://cdn.jsdelivr.net/gh/tonuafsar-commits/premiere-pro-marker-reader-extension@master/update.json",
+    "https://api.github.com/repos/tonuafsar-commits/premiere-pro-marker-reader-extension/contents/update.json?ref=master",
     UPDATE_CHECK_URL,
-    "https://api.github.com/repos/tonuafsar-commits/premiere-pro-marker-reader-extension/contents/update.json?ref=master"
+    "https://cdn.jsdelivr.net/gh/tonuafsar-commits/premiere-pro-marker-reader-extension@master/update.json"
   ];
   var UPDATE_DOWNLOAD_URL = "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip";
   var csInterface = new CSInterface();

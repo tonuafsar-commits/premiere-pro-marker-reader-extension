@@ -1,5 +1,5 @@
 {
-  "version": "1.2.22",
-  "message": "Final Update: right-click context menu is disabled inside the extension panel.",
+  "version": "1.2.23",
+  "message": "Final Update: update checker now prioritizes fresh GitHub endpoints so users can find new updates.",
   "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }
