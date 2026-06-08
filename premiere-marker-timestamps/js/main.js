@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.21";
+  var CURRENT_VERSION = "1.2.22";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_CHECK_URLS = [
     "https://cdn.jsdelivr.net/gh/tonuafsar-commits/premiere-pro-marker-reader-extension@master/update.json",
@@ -28,6 +28,11 @@
   function setStatus(message, type) {
     status.textContent = message;
     status.className = "status" + (type ? " " + type : "");
+  }
+
+  function disableContextMenu(event) {
+    event.preventDefault();
+    return false;
   }
 
   function updateCopyState() {
@@ -691,6 +696,7 @@
   scanButton.addEventListener("click", scanMarkers);
   copyButton.addEventListener("click", copyTimestamps);
   exportButton.addEventListener("click", exportTimestamps);
+  document.addEventListener("contextmenu", disableContextMenu);
   checkUpdateButton.addEventListener("click", function () {
     setStatus("Checking for updates...", "");
     checkForUpdates(true);
