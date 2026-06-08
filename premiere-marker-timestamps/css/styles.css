@@ -265,7 +265,7 @@ button:disabled {
 
 .timestampRow {
   display: grid;
-  grid-template-columns: 78px 1fr auto;
+  grid-template-columns: 78px minmax(0, 1fr) 54px;
   align-items: center;
   gap: 10px;
   min-height: 38px;
@@ -305,17 +305,52 @@ button:disabled {
 }
 
 .timestampName {
+  width: 100%;
   min-width: 0;
   overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
   color: var(--text);
+  font: inherit;
   line-height: 1.35;
+  padding: 3px 5px;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.timestampName:hover {
+  background: rgba(255, 255, 255, 0.045);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.timestampName:focus {
+  overflow: visible;
+  background: rgba(159, 209, 243, 0.1);
+  border-color: rgba(159, 209, 243, 0.34);
+  color: #fff;
+  outline: none;
+  text-overflow: clip;
 }
 
 .duplicateBadge {
+  min-width: 48px;
   color: var(--danger);
+  font-size: 12px;
   font-weight: 700;
+  text-align: right;
+}
+
+.duplicateBadge.saving {
+  color: rgba(159, 209, 243, 0.82);
+}
+
+.duplicateBadge.synced {
+  color: rgba(147, 221, 169, 0.8);
 }
 
 .credit {

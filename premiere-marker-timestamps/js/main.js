@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.20";
+  var CURRENT_VERSION = "1.2.21";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_CHECK_URLS = [
     "https://cdn.jsdelivr.net/gh/tonuafsar-commits/premiere-pro-marker-reader-extension@master/update.json",
@@ -23,6 +23,7 @@
   var creditLink = document.getElementById("creditLink");
   var successSound = document.getElementById("successSound");
   var currentOutputText = "";
+  var currentMarkers = [];
 
   function setStatus(message, type) {
     status.textContent = message;
@@ -71,6 +72,10 @@
 
   function normalizeTimestampFileText(value) {
     return normalizeTimestampText(value, "\r\n");
+  }
+
+  function cleanMarkerName(value) {
+    return String(value || "").replace(/[\r\n\t]+/g, " ").replace(/^\s+|\s+$/g, "");
   }
 
   function parseTimestampSeconds(timestamp) {
@@ -163,6 +168,64 @@
     return marker ? marker.time : "";
   }
 
+  function refreshCurrentOutputFromMarkers(markers) {
+    currentMarkers = markers || [];
+    currentOutputText = normalizeTimestampLines(currentMarkers.map(markerLine).join("\n"));
+  }
+
+  function setRowBadge(row, text, className) {
+    var badge = row.querySelector(".duplicateBadge");
+
+    if (!badge) {
+      return;
+    }
+
+    badge.textContent = text || "";
+    badge.className = "duplicateBadge" + (className ? " " + className : "");
+  }
+
+  function updateEditableMarkerName(marker, input, row) {
+    var nextName = cleanMarkerName(input.value);
+    var previousName = input.getAttribute("data-synced-name") || "";
+
+    input.value = nextName || "(unnamed marker)";
+
+    if (nextName === previousName) {
+      return;
+    }
+
+    input.disabled = true;
+    setRowBadge(row, "saving", "saving");
+
+    csInterface.evalScript(
+      "MarkerTimestamps.updateSequenceMarkerName(" + Number(marker.seconds || 0) + ", '" + encodeForExtendScript(nextName) + "')",
+      function (result) {
+        input.disabled = false;
+
+        if (typeof result === "string" && result.indexOf("ERROR:") === 0) {
+          input.value = previousName || "(unnamed marker)";
+          setRowBadge(row, "error", "");
+          setStatus(result.replace("ERROR:", ""), "error");
+          return;
+        }
+
+        marker.name = nextName;
+        marker.line = nextName ? marker.time + " - " + nextName : marker.time;
+        input.setAttribute("data-synced-name", nextName);
+        refreshCurrentOutputFromMarkers(currentMarkers);
+        updateCopyState();
+        setRowBadge(row, "synced", "synced");
+        setStatus("Timeline marker updated at " + marker.time + ".", "success");
+
+        window.setTimeout(function () {
+          if (row.parentNode) {
+            renderOutput(currentMarkers);
+          }
+        }, 900);
+      }
+    );
+  }
+
   function seekToMarker(seconds, label) {
     var value = Number(seconds);
 
@@ -197,7 +260,7 @@
     items.forEach(function (marker, index) {
       var row = document.createElement("div");
       var button = document.createElement("button");
-      var name = document.createElement("span");
+      var name = document.createElement("input");
       var duplicateBadge;
 
       row.className = "timestampRow";
@@ -207,23 +270,42 @@
       button.textContent = marker.time;
       button.title = "Move playhead to " + marker.time;
       name.className = "timestampName";
-      name.textContent = marker.name || "(unnamed marker)";
+      name.type = "text";
+      name.value = marker.name || "(unnamed marker)";
+      name.setAttribute("data-synced-name", cleanMarkerName(marker.name));
+      name.setAttribute("spellcheck", "false");
+      name.title = "Edit this marker name in the active Premiere timeline.";
+
+      duplicateBadge = document.createElement("span");
+      duplicateBadge.className = "duplicateBadge";
 
       if (marker.isDuplicateName) {
-        duplicateBadge = document.createElement("span");
-        duplicateBadge.className = "duplicateBadge";
         duplicateBadge.textContent = "(!)";
         duplicateBadge.title = "This marker name is used more than once.";
-        name.appendChild(document.createTextNode(" "));
-        name.appendChild(duplicateBadge);
       }
 
       button.addEventListener("click", function () {
         seekToMarker(marker.seconds, marker.time);
       });
 
+      name.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          name.blur();
+        }
+      });
+
+      name.addEventListener("focus", function () {
+        name.select();
+      });
+
+      name.addEventListener("blur", function () {
+        updateEditableMarkerName(marker, name, row);
+      });
+
       row.appendChild(button);
       row.appendChild(name);
+      row.appendChild(duplicateBadge);
       output.appendChild(row);
     });
   }
@@ -501,6 +583,7 @@
       scanButton.disabled = false;
 
       if (typeof result === "string" && result.indexOf("ERROR:") === 0) {
+        currentMarkers = [];
         currentOutputText = "";
         renderOutput([]);
         updateCopyState();
@@ -515,6 +598,7 @@
       }
 
       lines = markers.map(markerLine);
+      currentMarkers = markers;
       currentOutputText = normalizeTimestampLines(lines.join("\n"));
       renderOutput(markers);
       updateCopyState();

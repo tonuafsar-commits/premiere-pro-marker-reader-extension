@@ -213,6 +213,58 @@ MarkerTimestamps.seekToSeconds = function (seconds) {
   }
 };
 
+MarkerTimestamps.updateSequenceMarkerName = function (seconds, name) {
+  try {
+    if (!app || !app.project) {
+      return "ERROR:Premiere Pro project is not available.";
+    }
+
+    var sequence = app.project.activeSequence;
+    if (!sequence) {
+      return "ERROR:No active sequence found. Open a timeline and try again.";
+    }
+
+    if (!sequence.markers) {
+      return "ERROR:This Premiere Pro version does not expose sequence markers to extensions.";
+    }
+
+    var targetSeconds = Number(seconds || 0);
+    var cleanName = MarkerTimestamps.cleanMarkerName(name);
+    var markers = sequence.markers;
+    var marker = markers.getFirstMarker();
+    var markerSeconds;
+    var bestMarker = null;
+    var bestDistance = 999999;
+    var distance;
+
+    while (marker) {
+      markerSeconds = MarkerTimestamps.getMarkerSeconds(marker);
+      distance = Math.abs(markerSeconds - targetSeconds);
+
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestMarker = marker;
+      }
+
+      marker = markers.getNextMarker(marker);
+    }
+
+    if (!bestMarker || bestDistance > 0.05) {
+      return "ERROR:Could not find the timeline marker to update. Scan again and retry.";
+    }
+
+    try {
+      bestMarker.name = cleanName;
+    } catch (writeError) {
+      return "ERROR:This Premiere Pro version does not allow marker name editing from extensions.";
+    }
+
+    return "OK";
+  } catch (error) {
+    return "ERROR:" + error.toString();
+  }
+};
+
 MarkerTimestamps.saveTextFile = function (content) {
   var file;
 
