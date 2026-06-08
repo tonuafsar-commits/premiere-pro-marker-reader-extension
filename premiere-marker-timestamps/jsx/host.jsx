@@ -230,12 +230,13 @@ MarkerTimestamps.saveTextFile = function (content) {
     }
 
     file.encoding = "UTF-8";
+    file.lineFeed = "Windows";
 
     if (!file.open("w")) {
       return "ERROR:Could not open the selected file for writing.";
     }
 
-    file.write(MarkerTimestamps.normalizeTimestampFileText(content));
+    file.write(MarkerTimestamps.normalizeTimestampLines(content));
     file.close();
 
     return file.fsName;
