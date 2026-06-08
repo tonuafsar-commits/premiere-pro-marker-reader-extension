@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.19";
+  var CURRENT_VERSION = "1.2.20";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_CHECK_URLS = [
     "https://cdn.jsdelivr.net/gh/tonuafsar-commits/premiere-pro-marker-reader-extension@master/update.json",
@@ -13,12 +13,14 @@
   var scanButton = document.getElementById("scanButton");
   var copyButton = document.getElementById("copyButton");
   var exportButton = document.getElementById("exportButton");
+  var panel = document.getElementById("panel");
   var output = document.getElementById("timestampOutput");
   var status = document.getElementById("status");
   var updateNotice = document.getElementById("updateNotice");
   var updateText = document.getElementById("updateText");
   var checkUpdateButton = document.getElementById("checkUpdateButton");
   var downloadUpdateButton = document.getElementById("downloadUpdateButton");
+  var creditLink = document.getElementById("creditLink");
   var successSound = document.getElementById("successSound");
   var currentOutputText = "";
 
@@ -31,6 +33,14 @@
     var hasText = currentOutputText.trim().length > 0;
     copyButton.disabled = !hasText;
     exportButton.disabled = !hasText;
+
+    if (panel) {
+      if (hasText) {
+        panel.classList.add("is-scanned");
+      } else {
+        panel.classList.remove("is-scanned");
+      }
+    }
   }
 
   function encodeForExtendScript(value) {
@@ -479,6 +489,9 @@
 
   function scanMarkers() {
     scanButton.disabled = true;
+    if (panel) {
+      panel.classList.add("is-scanned");
+    }
     setStatus("Scanning active sequence markers...", "");
 
     csInterface.evalScript("MarkerTimestamps.getActiveSequenceMarkersJson()", function (result) {
@@ -507,10 +520,13 @@
       updateCopyState();
 
       if (currentOutputText.trim().length === 0) {
+        if (panel) {
+          panel.classList.remove("is-scanned");
+        }
         setStatus("No markers found in the active sequence.", "");
       } else {
         var count = currentOutputText.split(/\r?\n/).filter(Boolean).length;
-        setStatus(count + " marker" + (count === 1 ? "" : "s") + " found.", "success");
+        setStatus(count + " sequence marker" + (count === 1 ? "" : "s") + " found.", "success");
       }
     });
   }
@@ -597,6 +613,10 @@
   });
   downloadUpdateButton.addEventListener("click", function () {
     openExternalUrl(downloadUpdateButton.getAttribute("data-url") || UPDATE_DOWNLOAD_URL);
+  });
+  creditLink.addEventListener("click", function (event) {
+    event.preventDefault();
+    openExternalUrl(creditLink.href);
   });
   updateCopyState();
   renderOutput([]);

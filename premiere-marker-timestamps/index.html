@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Marker Timestamps</title>
-    <link rel="stylesheet" href="./css/styles.css?v=1.2.19">
+    <link rel="stylesheet" href="./css/styles.css?v=1.2.20">
   </head>
   <body>
-    <main class="panel">
+    <main id="panel" class="panel">
       <header class="header">
         <div class="titleRow">
           <h1>Marker Timestamps</h1>
           <div class="titleTools">
             <button id="checkUpdateButton" class="checkUpdateButton" type="button" title="Check for updates">Update</button>
-            <span class="version">v1.2.19</span>
+            <span class="version">v1.2.20</span>
           </div>
         </div>
         <p id="status" class="status">Open a sequence, then scan its timeline markers.</p>
@@ -34,6 +34,7 @@
       <div id="timestampOutput" class="timestampOutput" role="textbox" aria-readonly="true" tabindex="0" aria-label="Timestamps and names">
         <span class="outputPlaceholder">00:15 - Intro<br>01:42 - Product closeup<br>03:08 - End screen</span>
       </div>
+      <a id="creditLink" class="credit" href="https://www.youtube.com/@AfsarNoorTonmoy/playlists" target="_blank" rel="noopener noreferrer">powered by ANTonmoy</a>
       <audio id="successSound" src="./assets/save-success.mp3" preload="auto"></audio>
     </main>
 
