@@ -1,5 +1,5 @@
 {
-  "version": "1.2.25",
-  "message": "The Final Kiss: update notification visibility fix for Premiere Pro users.",
+  "version": "1.2.26",
+  "message": "Editable marker names update: copy, cut, paste, keyboard shortcuts, and timeline marker name syncing.",
   "downloadUrl": "https://github.com/tonuafsar-commits/premiere-pro-marker-reader-extension/raw/refs/heads/master/dist/Marker-Timestamps-Complete-Package.zip"
 }

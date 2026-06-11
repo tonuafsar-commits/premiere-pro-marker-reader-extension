@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var CURRENT_VERSION = "1.2.25";
+  var CURRENT_VERSION = "1.2.26";
   var UPDATE_CHECK_URL = "https://raw.githubusercontent.com/tonuafsar-commits/premiere-pro-marker-reader-extension/master/update.json";
   var UPDATE_CHECK_URLS = [
     "https://api.github.com/repos/tonuafsar-commits/premiere-pro-marker-reader-extension/contents/update.json?ref=master",
@@ -31,8 +31,31 @@
   }
 
   function disableContextMenu(event) {
+    if (isEditableMarkerName(event.target)) {
+      return true;
+    }
+
     event.preventDefault();
     return false;
+  }
+
+  function isEditableMarkerName(target) {
+    return !!(target && target.classList && target.classList.contains("timestampName"));
+  }
+
+  function isTextEditingShortcut(event) {
+    var key = String(event.key || "").toLowerCase();
+
+    if (!(event.ctrlKey || event.metaKey)) {
+      return false;
+    }
+
+    return key === "a" ||
+      key === "c" ||
+      key === "x" ||
+      key === "v" ||
+      key === "z" ||
+      key === "y";
   }
 
   function updateCopyState() {
@@ -202,6 +225,20 @@
     input.disabled = true;
     setRowBadge(row, "saving", "saving");
 
+    if (isEditablePreviewMode()) {
+      window.setTimeout(function () {
+        input.disabled = false;
+        marker.name = nextName;
+        marker.line = nextName ? marker.time + " - " + nextName : marker.time;
+        input.setAttribute("data-synced-name", nextName);
+        refreshCurrentOutputFromMarkers(currentMarkers);
+        updateCopyState();
+        setRowBadge(row, "synced", "synced");
+        setStatus("Preview marker updated at " + marker.time + ".", "success");
+      }, 220);
+      return;
+    }
+
     csInterface.evalScript(
       "MarkerTimestamps.updateSequenceMarkerName(" + Number(marker.seconds || 0) + ", '" + encodeForExtendScript(nextName) + "')",
       function (result) {
@@ -279,6 +316,9 @@
       name.value = marker.name || "(unnamed marker)";
       name.setAttribute("data-synced-name", cleanMarkerName(marker.name));
       name.setAttribute("spellcheck", "false");
+      name.setAttribute("autocomplete", "off");
+      name.setAttribute("autocorrect", "off");
+      name.setAttribute("autocapitalize", "off");
       name.title = "Edit this marker name in the active Premiere timeline.";
 
       duplicateBadge = document.createElement("span");
@@ -294,14 +334,37 @@
       });
 
       name.addEventListener("keydown", function (event) {
+        if (isTextEditingShortcut(event)) {
+          event.stopPropagation();
+          return;
+        }
+
         if (event.key === "Enter") {
           event.preventDefault();
+          name.blur();
+        }
+
+        if (event.key === "Escape") {
+          event.preventDefault();
+          name.value = name.getAttribute("data-synced-name") || "";
           name.blur();
         }
       });
 
       name.addEventListener("focus", function () {
         name.select();
+      });
+
+      name.addEventListener("copy", function (event) {
+        event.stopPropagation();
+      });
+
+      name.addEventListener("cut", function (event) {
+        event.stopPropagation();
+      });
+
+      name.addEventListener("paste", function (event) {
+        event.stopPropagation();
       });
 
       name.addEventListener("blur", function () {
@@ -420,6 +483,38 @@
     }
 
     return data;
+  }
+
+  function isEditablePreviewMode() {
+    return /(?:\?|&)preview=editable(?:&|$)/.test(window.location.search || "");
+  }
+
+  function loadEditablePreviewMarkers() {
+    currentMarkers = [
+      { time: "00:15", name: "Intro", seconds: 15, line: "00:15 - Intro" },
+      { time: "01:42", name: "Product close-up shot", seconds: 102, line: "01:42 - Product close-up shot" },
+      { time: "03:08", name: "Mac installation", seconds: 188, line: "03:08 - Mac installation" },
+      { time: "04:21", name: "Windows installation", seconds: 261, line: "04:21 - Windows installation" },
+      { time: "05:36", name: "Scan markers", seconds: 336, line: "05:36 - Scan markers" },
+      { time: "06:10", name: "Edit marker names", seconds: 370, line: "06:10 - Edit marker names" },
+      { time: "06:48", name: "Copy timestamps", seconds: 408, line: "06:48 - Copy timestamps" },
+      { time: "07:22", name: "Save TXT file", seconds: 442, line: "07:22 - Save TXT file" },
+      { time: "08:05", name: "Mac installation", seconds: 485, line: "08:05 - Mac installation" },
+      { time: "09:14", name: "Final notes", seconds: 554, line: "09:14 - Final notes" }
+    ];
+    refreshCurrentOutputFromMarkers(currentMarkers);
+    renderOutput(currentMarkers);
+    updateCopyState();
+    setStatus(currentMarkers.length + " sequence markers found.", "success");
+
+    window.setTimeout(function () {
+      var firstName = output.querySelector(".timestampName");
+
+      if (firstName) {
+        firstName.focus();
+        firstName.setSelectionRange(0, firstName.value.length);
+      }
+    }, 620);
   }
 
   function playFallbackChime() {
@@ -710,5 +805,8 @@
   });
   updateCopyState();
   renderOutput([]);
+  if (isEditablePreviewMode()) {
+    loadEditablePreviewMarkers();
+  }
   checkForUpdates(false);
 }());
